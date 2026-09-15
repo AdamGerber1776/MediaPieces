@@ -5,23 +5,43 @@ using UnityEngine.UIElements;
 
 public class MainMenuHandler : MonoBehaviour
 {
+    //initialize variable for full UI document
     private UIDocument _document;
+
+    //initialize buttons
     private Button _startButton;
     private Button _optionsButton;
     private Button _exitButton;
+    private Button _selectFileButton;
+    private Button _selectFolderButton;
+    private Button _exitSelectionPopupButton;
+
+    //initialize visual elements
+    private VisualElement _fileSelectionPopup;
 
     private void Awake()
     {
-        //Gets primary ui document and buttons
+        //Gets primary ui document
         _document = GetComponent<UIDocument>();
+
+        //gets ui buttons
         _startButton = _document.rootVisualElement.Q("StartButton") as Button;
         _optionsButton = _document.rootVisualElement.Q("OptionsButton") as Button;
         _exitButton = _document.rootVisualElement.Q("ExitButton") as Button;
+        _selectFileButton = _document.rootVisualElement.Q("SelectFileButton") as Button;
+        _selectFolderButton = _document.rootVisualElement.Q("SelectFolderButton") as Button;
+        _exitSelectionPopupButton = _document.rootVisualElement.Q("ExitSelectionPopupButton") as Button;
+
+        //gets ui visual elements (primarily for popup screens)
+        _fileSelectionPopup = _document.rootVisualElement.Q("FileSelectionPopup") as VisualElement;
 
         //Registers events for clicking each button
         _startButton.RegisterCallback<ClickEvent>(OnStartButtonPress);
         _optionsButton.RegisterCallback<ClickEvent>(OnOptionsButtonPress);
         _exitButton.RegisterCallback<ClickEvent>(OnExitButtonPress);
+        _selectFileButton.RegisterCallback<ClickEvent>(OnSelectFileButtonPress);
+        _selectFolderButton.RegisterCallback<ClickEvent>(OnSelectFolderButtonPress);
+        _exitSelectionPopupButton.RegisterCallback<ClickEvent>(OnExitSelectionPopupButtonPress);
     }
 
     private void OnDisable()
@@ -32,17 +52,41 @@ public class MainMenuHandler : MonoBehaviour
         _exitButton.UnregisterCallback<ClickEvent>(OnStartButtonPress);
     }
 
+    //pulls up the file selection popup to determine if users want to select a file or a folder
     private void OnStartButtonPress(ClickEvent evt)
     {
         Debug.Log("Start Button Pressed");
+        _fileSelectionPopup.style.display = DisplayStyle.Flex;
     }
+
+    //pulls up the settings menu
     private void OnOptionsButtonPress(ClickEvent evt)
     {
         Debug.Log("Options Button Pressed");
     }
+
+    //exits the game
     private void OnExitButtonPress(ClickEvent evt)
     {
         Debug.Log("Exit Button Pressed");
         Application.Quit();
+    }
+
+        private void OnSelectFileButtonPress(ClickEvent evt)
+    {
+        Debug.Log("Select file Button Pressed");
+    }
+
+    //pulls up the settings menu
+    private void OnSelectFolderButtonPress(ClickEvent evt)
+    {
+        Debug.Log("select folder Button Pressed");
+    }
+
+    //exits the game
+    private void OnExitSelectionPopupButtonPress(ClickEvent evt)
+    {
+        Debug.Log("Exit selection popup Button Pressed");
+        _fileSelectionPopup.style.display = DisplayStyle.None;
     }
 }
