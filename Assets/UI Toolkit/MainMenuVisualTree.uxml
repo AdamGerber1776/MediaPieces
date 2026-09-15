@@ -1,0 +1,17 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI%20Toolkit/MainMenuStyle.uss?fileID=7433441132597879392&amp;guid=fa49ab7443592304ca66e6be7f641aae&amp;type=3#MainMenuStyle"/>
+    <ui:VisualElement name="Background" style="flex-grow: 1; -unity-background-image-tint-color: rgb(255, 255, 255); background-color: rgb(219, 231, 211);">
+        <ui:VisualElement name="Title" style="flex-grow: 1; flex-direction: row; justify-content: center; margin-top: 5%; max-height: 175px;">
+            <ui:Label text="Media" name="TitleLeft" class="title" style="color: rgb(82, 82, 82); -unity-font-style: bold; -unity-text-align: upper-right;"/>
+            <ui:Label text="Pieces" name="TitleRight" class="title" style="color: rgb(115, 115, 115); -unity-text-align: upper-left; max-width: none; max-height: none;"/>
+        </ui:VisualElement>
+        <ui:VisualElement name="Subtitle" style="flex-grow: 1; max-height: 175px;">
+            <ui:Label text="Rediscover your media,&#10;one piece at a time." name="Subtitle" class="subtitle" style="-unity-text-align: upper-center;"/>
+        </ui:VisualElement>
+        <ui:VisualElement name="Buttons" style="flex-grow: 1; justify-content: space-between; margin-bottom: 8%;">
+            <ui:Button text="Start" name="StartButton" class="button" style="border-top-left-radius: 30px;"/>
+            <ui:Button text="Options" name="OptionsButton" class="button"/>
+            <ui:Button text="Exit" name="ExitButton" class="button"/>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
