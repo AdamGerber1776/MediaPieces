@@ -37,4 +37,12 @@
     border-bottom-width: 2px;
     border-left-width: 2px;
     color: rgb(247, 247, 222);
+    transition-property: all;
+    transition-duration: 0s;
+    transition-timing-function: ease;
+    transition-delay: 0s;
+}
+
+.button:active {
+    background-color: rgb(82, 82, 82);
 }
