@@ -27,7 +27,7 @@
                     "priority": 0
                 },
                 {
-                    "name": "PanDelta",
+                    "name": "MouseDelta",
                     "type": "Value",
                     "id": "87d90b85-ec97-4527-8f02-06ed3f02a9ac",
                     "expectedControlType": "Vector2",
@@ -44,6 +44,16 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true,
+                    "priority": 0
+                },
+                {
+                    "name": "PieceMovement",
+                    "type": "Button",
+                    "id": "6bbd0f3e-9dd8-4699-92f9-df06d20da327",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
                     "priority": 0
                 }
             ],
@@ -132,7 +142,18 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "PanDelta",
+                    "action": "MouseDelta",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c747c7ab-8220-457f-87a6-eff25e10c7f4",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "PieceMovement",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

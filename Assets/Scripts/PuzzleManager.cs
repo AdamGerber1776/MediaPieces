@@ -167,6 +167,7 @@ public class PuzzleManager : MonoBehaviour
                         );
                         break;
                 }
+                Collider2D collider = piece.AddComponent<BoxCollider2D>();
             }
         }
     }
