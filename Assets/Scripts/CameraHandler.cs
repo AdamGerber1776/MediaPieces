@@ -129,6 +129,9 @@ public class CameraHandler : MonoBehaviour
         if (pieceMovementAction.action.WasReleasedThisFrame())
         {
             //snap piece functionality
+            Vector2Int gridPosition = PuzzleManager.GetPieceGridPosition(selectedPiece.transform.position);
+            Vector3 snapPosition = PuzzleManager.GetBoardPosition(gridPosition.x, gridPosition.y);
+            selectedPiece.transform.position = snapPosition;
             selectedPiece = null;
         }
     }

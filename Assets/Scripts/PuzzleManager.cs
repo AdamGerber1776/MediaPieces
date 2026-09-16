@@ -7,7 +7,12 @@ public class PuzzleManager : MonoBehaviour
     [SerializeField] private Material gridMaterial;
 
     public static PuzzleManager Instance;
-    
+    private static float pieceWidth;
+    private static float pieceHeight;
+    private static float boardWidth;
+    private static float boardHeight;
+    private static int difficulty = 3; //temporarily set difficulty value. to be determined by selection later
+
     private void Awake()
     {
         //helps prevent the possibility of having two competing instances of this class
@@ -24,13 +29,12 @@ public class PuzzleManager : MonoBehaviour
     {
         Debug.Log("Creating puzzle from image of size: " + image.width + "x" + image.height);
 
-        int difficulty = 3; //temporarily set difficulty value. to be determined by selection later
-        float pieceWidth = image.width / 10f / difficulty;
-        float pieceHeight = image.height / 10f / difficulty;
+        pieceWidth = image.width / 10f / difficulty;
+        pieceHeight = image.height / 10f / difficulty;
         float pieceWidthPercent = 1.0f / difficulty;
         float pieceHeightPercent = 1.0f / difficulty;
-        float boardWidth = pieceWidth * difficulty;
-        float boardHeight = pieceHeight * difficulty;
+        boardWidth = pieceWidth * difficulty;
+        boardHeight = pieceHeight * difficulty;
         float gridGap = 0.2f; //gap between pieces of the board to create the grid
 
         int[] triangles =
@@ -89,14 +93,7 @@ public class PuzzleManager : MonoBehaviour
                 filter.mesh = mesh;
                 renderer.material = PuzzleManager.Instance.cellMaterial;
 
-                float posX = -boardWidth / 2f + pieceWidth / 2f + x * pieceWidth;
-                float posY = -boardHeight / 2f + pieceHeight / 2f + y * pieceHeight;
-
-                boardPiece.transform.position = new Vector3(
-                    posX,
-                    posY,
-                    1
-                );
+                boardPiece.transform.position = GetBoardPosition(x, y);
             }
         }
 
@@ -170,5 +167,30 @@ public class PuzzleManager : MonoBehaviour
                 Collider2D collider = piece.AddComponent<BoxCollider2D>();
             }
         }
+    }
+
+    public static Vector3 GetBoardPosition(int x, int y)
+    {
+        float posX = -boardWidth / 2f + pieceWidth / 2f + x * pieceWidth;
+        float posY = -boardHeight / 2f + pieceHeight / 2f + y * pieceHeight;
+
+        return new Vector3(posX, posY, 0f);
+    }
+
+    public static Vector2Int GetPieceGridPosition(Vector3 piecePosition)
+    {
+        float relativeX = piecePosition.x - (-boardWidth / 2f + pieceWidth / 2f);
+        float relativeY = piecePosition.y - (-boardHeight / 2f + pieceHeight / 2f);
+
+        float gridX = relativeX / pieceWidth;
+        float gridY = relativeY / pieceHeight;
+
+        int x = Mathf.RoundToInt(gridX);
+        int y = Mathf.RoundToInt(gridY);
+
+        x = Mathf.Clamp(x, 0, difficulty - 1);
+        y = Mathf.Clamp(y, 0, difficulty - 1);
+
+        return new Vector2Int(x, y);
     }
 }
