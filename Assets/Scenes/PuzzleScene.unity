@@ -455,7 +455,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be21c4c1b7e62d0458d8a45d2d17a9f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameState
-  selectedFilePath: C:\Users\Owner\Downloads\MediaPiecesMenueFileSelectionMockupRedesign.drawio.png
+  selectedFilePath: 
 --- !u!4 &1698215103
 Transform:
   m_ObjectHideFlags: 0
