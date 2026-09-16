@@ -1,12 +1,10 @@
 <ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <Style src="project://database/Assets/UI%20Toolkit/PuzzleUIStyle.uss?fileID=7433441132597879392&amp;guid=a306e541b1bc27448ab8654a12dd1006&amp;type=3#PuzzleUIStyle"/>
-    <ui:VisualElement name="Background" enabled="true" picking-mode="Position" style="flex-grow: 1; background-color: rgb(219, 231, 211); opacity: 1;">
-        <ui:VisualElement name="TopMenuBar" picking-mode="Ignore" style="flex-grow: 1; height: 15%; max-height: 15%; flex-direction: row; justify-content: space-between; align-items: flex-start; position: absolute; width: 100%;">
-            <ui:Button text="Skip" name="SkipButton" class="button"/>
-        </ui:VisualElement>
-        <ui:VisualElement name="RightMenuRightSide" picking-mode="Ignore" style="flex-grow: 1; flex-direction: row-reverse; max-height: none; max-width: none; height: 15%; position: absolute; width: 100%; justify-content: flex-start; left: auto;">
-            <ui:Button text="Menu" name="MenuButton" class="button"/>
-            <ui:Button text="Hint" name="HintButton" class="button"/>
-        </ui:VisualElement>
+    <ui:VisualElement name="TopMenuBar" picking-mode="Ignore" style="flex-grow: 1; height: 15%; max-height: 15%; flex-direction: row; justify-content: space-between; align-items: flex-start; position: absolute; width: 100%;">
+        <ui:Button text="Skip" name="SkipButton" class="button"/>
+    </ui:VisualElement>
+    <ui:VisualElement name="RightMenuRightSide" picking-mode="Ignore" style="flex-grow: 1; flex-direction: row-reverse; max-height: none; max-width: none; height: 15%; position: absolute; width: 100%; justify-content: flex-start; left: auto;">
+        <ui:Button text="Menu" name="MenuButton" class="button"/>
+        <ui:Button text="Hint" name="HintButton" class="button"/>
     </ui:VisualElement>
 </ui:UXML>
