@@ -13,6 +13,8 @@ public class PuzzleManager : MonoBehaviour
     private static float boardHeight;
     private static int difficulty = 3; //temporarily set difficulty value. to be determined by selection later
 
+    public static int[,] occupiedGridPositions;
+
     private void Awake()
     {
         //helps prevent the possibility of having two competing instances of this class
@@ -29,6 +31,7 @@ public class PuzzleManager : MonoBehaviour
     {
         Debug.Log("Creating puzzle from image of size: " + image.width + "x" + image.height);
 
+        occupiedGridPositions = new int[difficulty, difficulty];
         pieceWidth = image.width / 10f / difficulty;
         pieceHeight = image.height / 10f / difficulty;
         float pieceWidthPercent = 1.0f / difficulty;
@@ -93,7 +96,12 @@ public class PuzzleManager : MonoBehaviour
                 filter.mesh = mesh;
                 renderer.material = PuzzleManager.Instance.cellMaterial;
 
-                boardPiece.transform.position = GetBoardPosition(x, y);
+                Vector3 boardPosition = GetBoardPosition(x, y);
+                boardPiece.transform.position = new Vector3(
+                    boardPosition.x,
+                    boardPosition.y,
+                    1
+                );
             }
         }
 
@@ -106,7 +114,7 @@ public class PuzzleManager : MonoBehaviour
         float piecesPadding = 1f; //padding to prevent pieces from being placed too close to the board edges
         float piecesSpace = pieceWidth * 2f; //size of the space in which the pieces can be placed on either side of the board
 
-        //creates the puzzle pieces and places them on the board
+        //creates the puzzle pieces and places them around the board
         for (int x = 0; x < difficulty; x++)
         {
             for (int y = 0; y < difficulty; y++)
@@ -193,9 +201,15 @@ public class PuzzleManager : MonoBehaviour
 
         int x = Mathf.RoundToInt(gridX);
         int y = Mathf.RoundToInt(gridY);
-
-        x = Mathf.Clamp(x, 0, difficulty - 1);
-        y = Mathf.Clamp(y, 0, difficulty - 1);
+        
+        if (x < 0 || x >= difficulty)
+        {
+            x = -1;
+        }
+        if (y < 0 || y >= difficulty)
+        {
+            y = -1;
+        }
 
         return new Vector2Int(x, y);
     }
@@ -203,10 +217,10 @@ public class PuzzleManager : MonoBehaviour
     //checks if all pieces are in their correct positions
     public static void CheckPuzzleCompletion()
     {
-        PuzzlePiece[] pieces = GameObject.FindObjectsOfType<PuzzlePiece>();
+        PuzzlePiece[] pieces = GameObject.FindObjectsByType<PuzzlePiece>();
         foreach (PuzzlePiece piece in pieces)
         {
-            if (piece.currentGridPosition != piece.correctGridPosition)
+            if (!piece.isPlacedCorrectly)
             {
                 return;
             }

@@ -110,13 +110,20 @@ public class CameraHandler : MonoBehaviour
             Vector3 mouseScreenPosition = Mouse.current.position.ReadValue();
             Vector3 mouseWorldPosition = Camera.main.ScreenToWorldPoint(mouseScreenPosition);
             mouseWorldPosition.z = 0f; // Set z to 0 to ensure the piece stays in the correct plane
-            Collider2D hit = Physics2D.OverlapPoint(mouseWorldPosition);
-            if (hit == null)
+            if (Physics2D.OverlapPoint(mouseWorldPosition) == null)
             {
                 return;
             }
+            Collider2D hit = Physics2D.OverlapPoint(mouseWorldPosition);
             selectedPiece = hit.gameObject;
             dragOffset = selectedPiece.transform.position - mouseWorldPosition;
+            dragOffset.z = -1f; // Set z to -1 to ensure the piece stays above all other pieces while being dragged
+            PuzzlePiece puzzlePiece = selectedPiece.GetComponent<PuzzlePiece>();
+            if (puzzlePiece.currentGridPosition.x != -1 && puzzlePiece.currentGridPosition.y != -1)
+            {
+                PuzzleManager.occupiedGridPositions[puzzlePiece.currentGridPosition.x, puzzlePiece.currentGridPosition.y] = 0; // Mark the grid position as unoccupied
+                puzzlePiece.currentGridPosition = new Vector2Int(-1, -1); // Reset the current grid position
+            }
         }
         // Check if the left mouse button is pressed
         if (pieceMovementAction.action.IsPressed() && selectedPiece != null)
@@ -126,16 +133,38 @@ public class CameraHandler : MonoBehaviour
             mouseWorldPosition.z = 0f; // Set z to 0 to ensure the piece stays in the correct plane
             selectedPiece.transform.position = mouseWorldPosition + dragOffset;
         }
-        if (pieceMovementAction.action.WasReleasedThisFrame())
+        if (pieceMovementAction.action.WasReleasedThisFrame() && selectedPiece != null)
         {
             //snap piece functionality
             Vector2Int gridPosition = PuzzleManager.GetPieceGridPosition(selectedPiece.transform.position);
-            Vector3 snapPosition = PuzzleManager.GetBoardPosition(gridPosition.x, gridPosition.y);
-            selectedPiece.transform.position = snapPosition;
             PuzzlePiece puzzlePiece = selectedPiece.GetComponent<PuzzlePiece>();
-            puzzlePiece.currentGridPosition = gridPosition;
+            if (gridPosition.x != -1 && gridPosition.y != -1)
+            {
+                if (PuzzleManager.occupiedGridPositions[gridPosition.x, gridPosition.y] == 0)
+                {
+                    Vector3 snapPosition = PuzzleManager.GetBoardPosition(gridPosition.x, gridPosition.y);
+                    snapPosition.z = 0.5f; // Set z to 0.5 to ensure the piece stays below pieces being moved on board
+                    selectedPiece.transform.position = snapPosition;
+                    puzzlePiece.currentGridPosition = gridPosition;
+                    PuzzleManager.occupiedGridPositions[gridPosition.x, gridPosition.y] = 1; // Mark the grid position as occupied
+                    PuzzleManager.CheckPuzzleCompletion();
+                }
+                else
+                {
+                    puzzlePiece.currentGridPosition = new Vector2Int(-1, -1);
+                    Vector3 resetPosition = selectedPiece.transform.position;
+                    resetPosition.z = 0f; //set position back to 0 so it is not above new moved pieces
+                    selectedPiece.transform.position = resetPosition;
+                }
+            }
+            else
+            {
+                puzzlePiece.currentGridPosition = new Vector2Int(-1, -1);
+                Vector3 resetPosition = selectedPiece.transform.position;
+                resetPosition.z = 0f; //set position back to 0 so it is not above new moved pieces
+                selectedPiece.transform.position = resetPosition;
+            }
             selectedPiece = null;
-            PuzzleManager.CheckPuzzleCompletion();
         }
     }
 
