@@ -37,4 +37,41 @@
     border-bottom-width: 2px;
     border-left-width: 2px;
     color: rgb(247, 247, 222);
+    transition-property: all;
+    transition-duration: 0s;
+    transition-timing-function: ease;
+    transition-delay: 0s;
+}
+
+.button:active {
+    background-color: rgb(82, 82, 82);
+}
+
+.popupButton {
+    align-self: center;
+    font-size: 50px;
+    color: rgb(247, 247, 222);
+    -unity-font-style: bold;
+    background-color: rgb(115, 115, 115);
+    border-top-left-radius: 30px;
+    border-top-right-radius: 30px;
+    border-bottom-right-radius: 30px;
+    border-bottom-left-radius: 30px;
+    border-top-width: 2px;
+    border-right-width: 2px;
+    border-bottom-width: 2px;
+    border-left-width: 2px;
+    border-left-color: rgb(82, 82, 82);
+    border-right-color: rgb(82, 82, 82);
+    border-top-color: rgb(82, 82, 82);
+    border-bottom-color: rgb(82, 82, 82);
+    max-width: none;
+    min-width: auto;
+    width: 70%;
+    padding-top: 2%;
+    padding-bottom: 2%;
+}
+
+.popupButton:active {
+    background-color: rgb(82, 82, 82);
 }

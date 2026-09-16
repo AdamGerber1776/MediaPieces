@@ -13,5 +13,16 @@
             <ui:Button text="Options" name="OptionsButton" class="button"/>
             <ui:Button text="Exit" name="ExitButton" class="button"/>
         </ui:VisualElement>
+        <ui:VisualElement name="FileSelectionPopup" enabled="true" style="flex-grow: 1; position: absolute; background-color: rgb(168, 168, 168); top: 40%; left: 30%; align-self: center; justify-content: space-evenly; right: 0; bottom: 0; max-width: 40%; max-height: 50%; border-top-left-radius: 30px; border-top-right-radius: 30px; border-bottom-right-radius: 30px; border-bottom-left-radius: 30px; visibility: visible; display: none;">
+            <ui:Button text="Select File" name="SelectFileButton" class="popupButton"/>
+            <ui:Button text="Select Folder" name="SelectFolderButton" class="popupButton"/>
+            <ui:Button text="Back" name="ExitSelectionPopupButton" class="popupButton"/>
+        </ui:VisualElement>
+        <ui:VisualElement name="DifficultySelectionPopup" enabled="true" style="flex-grow: 1; position: absolute; background-color: rgb(168, 168, 168); top: 40%; left: 30%; align-self: center; justify-content: space-evenly; right: 0; bottom: 0; max-width: 40%; max-height: 50%; border-top-left-radius: 30px; border-top-right-radius: 30px; border-bottom-right-radius: 30px; border-bottom-left-radius: 30px; visibility: visible; display: none;">
+            <ui:Button text="Easy" name="EasyButton" class="popupButton"/>
+            <ui:Button text="Normal" name="NormalButton" class="popupButton"/>
+            <ui:Button text="Hard" name="HardButton" class="popupButton"/>
+            <ui:Button text="Back" name="ExitDifficultyPopupButton" class="popupButton"/>
+        </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>
