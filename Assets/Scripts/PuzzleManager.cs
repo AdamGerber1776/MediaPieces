@@ -60,10 +60,10 @@ public class PuzzleManager : MonoBehaviour
         gridRenderer.material = PuzzleManager.Instance.gridMaterial;
 
         boardGrid.transform.position = new Vector3(
-                    0,
-                    0,
-                    2
-                );
+            0,
+            0,
+            2
+        );
 
         //creates the puzzle board
         for (int x = 0; x < difficulty; x++)

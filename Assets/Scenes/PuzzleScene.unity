@@ -421,6 +421,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraHandler
   padding: 15
+  moveAction: {fileID: 8349954377423107473, guid: 68ef47bac1b897f4f941f6991ac44c90, type: 3}
+  panAction: {fileID: 5818639764462326588, guid: 68ef47bac1b897f4f941f6991ac44c90, type: 3}
+  panDeltaAction: {fileID: 2410881850096151001, guid: 68ef47bac1b897f4f941f6991ac44c90, type: 3}
+  zoomAction: {fileID: -6254531476582133105, guid: 68ef47bac1b897f4f941f6991ac44c90, type: 3}
 --- !u!1 &1698215101
 GameObject:
   m_ObjectHideFlags: 0
