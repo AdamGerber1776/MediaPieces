@@ -226,5 +226,6 @@ public class PuzzleManager : MonoBehaviour
             }
         }
         Debug.Log("Puzzle Completed!");
+        PuzzleUIHandler.OnPuzzleCompletion();
     }
 }
