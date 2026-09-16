@@ -132,7 +132,10 @@ public class CameraHandler : MonoBehaviour
             Vector2Int gridPosition = PuzzleManager.GetPieceGridPosition(selectedPiece.transform.position);
             Vector3 snapPosition = PuzzleManager.GetBoardPosition(gridPosition.x, gridPosition.y);
             selectedPiece.transform.position = snapPosition;
+            PuzzlePiece puzzlePiece = selectedPiece.GetComponent<PuzzlePiece>();
+            puzzlePiece.currentGridPosition = gridPosition;
             selectedPiece = null;
+            PuzzleManager.CheckPuzzleCompletion();
         }
     }
 

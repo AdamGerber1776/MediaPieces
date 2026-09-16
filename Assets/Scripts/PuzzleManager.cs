@@ -112,6 +112,9 @@ public class PuzzleManager : MonoBehaviour
             for (int y = 0; y < difficulty; y++)
             {
                 GameObject piece = new GameObject("PuzzlePiece " + "x:" + x + " y:" + y);
+                PuzzlePiece puzzlePiece = piece.AddComponent<PuzzlePiece>();
+                puzzlePiece.correctGridPosition = new Vector2Int(x, y);
+                puzzlePiece.currentGridPosition = new Vector2Int(-1, -1);
                 Mesh mesh = new Mesh();
                 Vector3[] vertices =
                 {
@@ -169,6 +172,7 @@ public class PuzzleManager : MonoBehaviour
         }
     }
 
+    //to get the world position of a piece based on its grid position
     public static Vector3 GetBoardPosition(int x, int y)
     {
         float posX = -boardWidth / 2f + pieceWidth / 2f + x * pieceWidth;
@@ -177,6 +181,8 @@ public class PuzzleManager : MonoBehaviour
         return new Vector3(posX, posY, 0f);
     }
 
+    //to get the grid position of a piece based on its world position
+    //this is a rounded variable so it will round to the nearest grid position, which is useful for snapping pieces into place
     public static Vector2Int GetPieceGridPosition(Vector3 piecePosition)
     {
         float relativeX = piecePosition.x - (-boardWidth / 2f + pieceWidth / 2f);
@@ -192,5 +198,19 @@ public class PuzzleManager : MonoBehaviour
         y = Mathf.Clamp(y, 0, difficulty - 1);
 
         return new Vector2Int(x, y);
+    }
+
+    //checks if all pieces are in their correct positions
+    public static void CheckPuzzleCompletion()
+    {
+        PuzzlePiece[] pieces = GameObject.FindObjectsOfType<PuzzlePiece>();
+        foreach (PuzzlePiece piece in pieces)
+        {
+            if (piece.currentGridPosition != piece.correctGridPosition)
+            {
+                return;
+            }
+        }
+        Debug.Log("Puzzle Completed!");
     }
 }
