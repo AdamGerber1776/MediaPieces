@@ -4,8 +4,8 @@
         <ui:Button text="Skip" name="SkipButton" class="button"/>
     </ui:VisualElement>
     <ui:VisualElement name="RightMenuRightSide" picking-mode="Ignore" style="flex-grow: 1; flex-direction: row-reverse; max-height: none; max-width: none; height: 15%; position: absolute; width: 100%; justify-content: flex-start; left: auto;">
-        <ui:Button text="Menu" name="MenuButton" class="button"/>
-        <ui:Button text="Hint" name="HintButton" class="button"/>
+        <ui:Button text="Menu" name="MenuButton" class="button" style="visibility: hidden;"/>
+        <ui:Button text="Hint" name="HintButton" class="button" style="visibility: hidden;"/>
     </ui:VisualElement>
     <ui:VisualElement name="PuzzleCompletePopup" style="flex-grow: 1; position: absolute; top: 44%; bottom: auto; left: 40%; right: auto; border-left-color: rgb(82, 82, 82); border-right-color: rgb(82, 82, 82); border-top-color: rgb(82, 82, 82); border-bottom-color: rgb(82, 82, 82); border-top-width: 2px; border-right-width: 2px; border-bottom-width: 2px; border-left-width: 2px; height: 12%; display: none; opacity: 0.75; width: 20%;">
         <ui:VisualElement name="PuzzleCompleteSegment" style="flex-grow: 1; height: 30%; background-color: rgb(115, 115, 115);">
