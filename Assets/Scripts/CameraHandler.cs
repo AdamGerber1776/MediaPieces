@@ -105,6 +105,7 @@ public class CameraHandler : MonoBehaviour
 
     private void HandlePieceDragging()
     {
+        if (PuzzleUIHandler.isDragging) return;
         if (pieceMovementAction.action.WasPressedThisFrame())
         {
             Vector3 mouseScreenPosition = Mouse.current.position.ReadValue();
