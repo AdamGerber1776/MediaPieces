@@ -71,6 +71,7 @@ public class PuzzleUIHandler : MonoBehaviour
     private void OnHintButtonPress(ClickEvent evt)
     {
         Debug.Log("Hint Button Pressed");
+        PuzzleManager.HighlightPiece(PuzzleManager.GetHelpPiece());
     }
 
     private void OnMenuButtonPress(ClickEvent evt)
