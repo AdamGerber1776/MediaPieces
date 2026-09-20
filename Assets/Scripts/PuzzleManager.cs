@@ -36,6 +36,89 @@ public class PuzzleManager : MonoBehaviour
         pieceHeight = image.height / 10f / difficulty;
         float pieceWidthPercent = 1.0f / difficulty;
         float pieceHeightPercent = 1.0f / difficulty;
+        Instance.BuildBoard();
+
+        //variables to determine piece random placement location
+        float boardLeft   = -boardWidth / 2f;
+        float boardRight  =  boardWidth / 2f;
+        float piecesPadding = 1f; //padding to prevent pieces from being placed too close to the board edges
+        float piecesSpace = pieceWidth * 2f; //size of the space in which the pieces can be placed on either side of the board
+
+        //creates the puzzle pieces and places them around the board
+        for (int x = 0; x < difficulty; x++)
+        {
+            for (int y = 0; y < difficulty; y++)
+            {
+                GameObject piece = new GameObject("PuzzlePiece " + "x:" + x + " y:" + y);
+                PuzzlePiece puzzlePiece = piece.AddComponent<PuzzlePiece>();
+                puzzlePiece.correctGridPosition = new Vector2Int(x, y);
+                puzzlePiece.currentGridPosition = new Vector2Int(-1, -1);
+                Mesh mesh = new Mesh();
+                Vector3[] vertices =
+                {
+                    new Vector3(-pieceWidth / 2f, -pieceHeight / 2f, 0),
+                    new Vector3( pieceWidth / 2f, -pieceHeight / 2f, 0),
+                    new Vector3(-pieceWidth / 2f,  pieceHeight / 2f, 0),
+                    new Vector3( pieceWidth / 2f,  pieceHeight / 2f, 0)
+                };
+                mesh.vertices = vertices;
+
+                int[] triangles =
+                {
+                    0, 2, 1,
+                    2, 3, 1
+                };
+
+                mesh.triangles = triangles;
+                Vector2[] uv =
+                {
+                    new Vector2(pieceWidthPercent*x, pieceHeightPercent*y),
+                    new Vector2(pieceWidthPercent*(x+1), pieceHeightPercent*y),
+                    new Vector2(pieceWidthPercent*x, pieceHeightPercent*(y+1)),
+                    new Vector2(pieceWidthPercent*(x+1), pieceHeightPercent*(y+1))
+                };
+                mesh.uv = uv;
+                MeshFilter filter = piece.AddComponent<MeshFilter>();
+                MeshRenderer renderer = piece.AddComponent<MeshRenderer>();
+                filter.mesh = mesh;
+                Material material = new Material(Shader.Find("Sprites/Default"));
+                renderer.material = material;
+                material.mainTexture = image;
+
+                //randomly places the puzzle pieces on the board
+                int randomSide = UnityEngine.Random.Range(0, 2);
+                switch (randomSide)
+                {
+                    case 0: //left side
+                        piece.transform.position = new Vector3(
+                            UnityEngine.Random.Range(
+                                boardLeft - piecesSpace - piecesPadding - pieceWidth / 2f,
+                                 boardLeft - piecesPadding - pieceWidth / 2f),
+                            UnityEngine.Random.Range(
+                                -boardHeight / 2f,
+                                 boardHeight / 2f),
+                            0
+                        );
+                        break;
+                    case 1: //right side
+                        piece.transform.position = new Vector3(
+                            UnityEngine.Random.Range(
+                                boardRight + piecesPadding + pieceWidth / 2f,
+                                boardRight + piecesSpace + piecesPadding + pieceWidth / 2f),
+                            UnityEngine.Random.Range(
+                                -boardHeight / 2f,
+                                boardHeight / 2f),
+                            0
+                        );
+                        break;
+                }
+                Collider2D collider = piece.AddComponent<BoxCollider2D>();
+            }
+        }
+    }
+
+    private void BuildBoard()
+    {
         boardWidth = pieceWidth * difficulty;
         boardHeight = pieceHeight * difficulty;
         float gridGap;
@@ -118,77 +201,6 @@ public class PuzzleManager : MonoBehaviour
 
         //zooms the camera to fit the puzzle board
         CameraHandler.Instance.FrameBoard(boardWidth, boardHeight);
-
-        //variables to determine piece random placement location
-        float boardLeft   = -boardWidth / 2f;
-        float boardRight  =  boardWidth / 2f;
-        float piecesPadding = 1f; //padding to prevent pieces from being placed too close to the board edges
-        float piecesSpace = pieceWidth * 2f; //size of the space in which the pieces can be placed on either side of the board
-
-        //creates the puzzle pieces and places them around the board
-        for (int x = 0; x < difficulty; x++)
-        {
-            for (int y = 0; y < difficulty; y++)
-            {
-                GameObject piece = new GameObject("PuzzlePiece " + "x:" + x + " y:" + y);
-                PuzzlePiece puzzlePiece = piece.AddComponent<PuzzlePiece>();
-                puzzlePiece.correctGridPosition = new Vector2Int(x, y);
-                puzzlePiece.currentGridPosition = new Vector2Int(-1, -1);
-                Mesh mesh = new Mesh();
-                Vector3[] vertices =
-                {
-                    new Vector3(-pieceWidth / 2f, -pieceHeight / 2f, 0),
-                    new Vector3( pieceWidth / 2f, -pieceHeight / 2f, 0),
-                    new Vector3(-pieceWidth / 2f,  pieceHeight / 2f, 0),
-                    new Vector3( pieceWidth / 2f,  pieceHeight / 2f, 0)
-                };
-                mesh.vertices = vertices;
-                mesh.triangles = triangles;
-                Vector2[] uv =
-                {
-                    new Vector2(pieceWidthPercent*x, pieceHeightPercent*y),
-                    new Vector2(pieceWidthPercent*(x+1), pieceHeightPercent*y),
-                    new Vector2(pieceWidthPercent*x, pieceHeightPercent*(y+1)),
-                    new Vector2(pieceWidthPercent*(x+1), pieceHeightPercent*(y+1))
-                };
-                mesh.uv = uv;
-                MeshFilter filter = piece.AddComponent<MeshFilter>();
-                MeshRenderer renderer = piece.AddComponent<MeshRenderer>();
-                filter.mesh = mesh;
-                Material material = new Material(Shader.Find("Sprites/Default"));
-                renderer.material = material;
-                material.mainTexture = image;
-
-                //randomly places the puzzle pieces on the board
-                int randomSide = UnityEngine.Random.Range(0, 2);
-                switch (randomSide)
-                {
-                    case 0: //left side
-                        piece.transform.position = new Vector3(
-                            UnityEngine.Random.Range(
-                                boardLeft - piecesSpace - piecesPadding - pieceWidth / 2f,
-                                 boardLeft - piecesPadding - pieceWidth / 2f),
-                            UnityEngine.Random.Range(
-                                -boardHeight / 2f,
-                                 boardHeight / 2f),
-                            0
-                        );
-                        break;
-                    case 1: //right side
-                        piece.transform.position = new Vector3(
-                            UnityEngine.Random.Range(
-                                boardRight + piecesPadding + pieceWidth / 2f,
-                                boardRight + piecesSpace + piecesPadding + pieceWidth / 2f),
-                            UnityEngine.Random.Range(
-                                -boardHeight / 2f,
-                                boardHeight / 2f),
-                            0
-                        );
-                        break;
-                }
-                Collider2D collider = piece.AddComponent<BoxCollider2D>();
-            }
-        }
     }
 
     //to get the world position of a piece based on its grid position
