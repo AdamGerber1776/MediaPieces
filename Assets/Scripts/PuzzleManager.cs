@@ -38,7 +38,18 @@ public class PuzzleManager : MonoBehaviour
         float pieceHeightPercent = 1.0f / difficulty;
         boardWidth = pieceWidth * difficulty;
         boardHeight = pieceHeight * difficulty;
-        float gridGap = 0.2f; //gap between pieces of the board to create the grid
+        float gridGap;
+
+        //gap between pieces of the board to create the grid
+        if (pieceWidth > pieceHeight)
+        {
+            gridGap = pieceWidth * 0.01f; 
+        }
+        else
+        {
+            gridGap = pieceHeight * 0.01f; 
+        }
+        
 
         int[] triangles =
         {
