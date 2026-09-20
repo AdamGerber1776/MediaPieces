@@ -25,4 +25,7 @@
             <ui:Button text="Back" name="ExitDifficultyPopupButton" class="popupButton"/>
         </ui:VisualElement>
     </ui:VisualElement>
+    <ui:VisualElement name="LoadingScreen" picking-mode="Ignore" style="flex-grow: 1; position: absolute; width: 100%; height: 100%; background-color: rgb(219, 231, 211); justify-content: flex-start; align-items: center; display: none;">
+        <ui:Label text="Loading. Please Wait." name="LoadingText" style="font-size: 100px; margin-top: 10%; color: rgb(115, 115, 115);"/>
+    </ui:VisualElement>
 </ui:UXML>
