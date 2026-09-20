@@ -12,7 +12,7 @@ public class PuzzleManager : MonoBehaviour
     private static float pieceHeight;
     private static float boardWidth;
     private static float boardHeight;
-    private static int difficulty = 3; //temporarily set difficulty value. to be determined by selection later
+    private static int difficulty;
 
     public static int[,] occupiedGridPositions;
 
@@ -26,11 +26,13 @@ public class PuzzleManager : MonoBehaviour
         }
 
         Instance = this;
+        difficulty = GameState.Instance.selectedDifficulty;
     }
 
     public static void CreatePuzzleFromImage(Texture2D image)
     {
         Debug.Log("Creating puzzle from image of size: " + image.width + "x" + image.height);
+        Debug.Log("Creating puzzle of difficulty" + difficulty);
 
         occupiedGridPositions = new int[difficulty, difficulty];
         pieceWidth = image.width / 10f / difficulty;

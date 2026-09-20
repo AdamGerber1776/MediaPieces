@@ -119,6 +119,7 @@ public class MainMenuHandler : MonoBehaviour
     private void OnEasyButtonPress(ClickEvent evt)
     {
         Debug.Log("Easy Button Pressed");
+        GameState.Instance.selectedDifficulty = 3;
         _loadingScreen.style.display = DisplayStyle.Flex;
         SceneManager.LoadScene("PuzzleScene");
     }
@@ -127,6 +128,7 @@ public class MainMenuHandler : MonoBehaviour
     private void OnNormalButtonPress(ClickEvent evt)
     {
         Debug.Log("Normal Button Pressed");
+        GameState.Instance.selectedDifficulty = 5;
         _loadingScreen.style.display = DisplayStyle.Flex;
         SceneManager.LoadScene("PuzzleScene");
     }
@@ -135,6 +137,7 @@ public class MainMenuHandler : MonoBehaviour
     private void OnHardButtonPress(ClickEvent evt)
     {
         Debug.Log("Hard Button Pressed");
+        GameState.Instance.selectedDifficulty = 7;
         _loadingScreen.style.display = DisplayStyle.Flex;
         SceneManager.LoadScene("PuzzleScene");
     }
