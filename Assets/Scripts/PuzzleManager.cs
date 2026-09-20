@@ -5,6 +5,7 @@ public class PuzzleManager : MonoBehaviour
 {
     [SerializeField] private Material cellMaterial;
     [SerializeField] private Material gridMaterial;
+    [SerializeField] public Material puzzleMaterial;
 
     public static PuzzleManager Instance;
     private static float pieceWidth;
@@ -81,9 +82,7 @@ public class PuzzleManager : MonoBehaviour
                 MeshFilter filter = piece.AddComponent<MeshFilter>();
                 MeshRenderer renderer = piece.AddComponent<MeshRenderer>();
                 filter.mesh = mesh;
-                Material material = new Material(Shader.Find("Sprites/Default"));
-                renderer.material = material;
-                material.mainTexture = image;
+                renderer.material = Instance.puzzleMaterial;
 
                 //randomly places the puzzle pieces on the board
                 int randomSide = UnityEngine.Random.Range(0, 2);
