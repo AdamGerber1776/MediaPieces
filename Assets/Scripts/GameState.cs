@@ -6,6 +6,7 @@ public class GameState : MonoBehaviour
 
     //file path to be used in puzzle scene
     public string selectedFilePath;
+    public int selectedDifficulty;
     
     private void Awake()
     {

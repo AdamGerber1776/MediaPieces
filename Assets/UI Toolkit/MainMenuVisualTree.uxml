@@ -8,7 +8,7 @@
         <ui:VisualElement name="Subtitle" style="flex-grow: 1; max-height: 175px;">
             <ui:Label text="Rediscover your media,&#10;one piece at a time." name="Subtitle" class="subtitle" style="-unity-text-align: upper-center;"/>
         </ui:VisualElement>
-        <ui:VisualElement name="Buttons" style="flex-grow: 1; justify-content: space-between; margin-bottom: 8%;">
+        <ui:VisualElement name="Buttons" style="flex-grow: 1; justify-content: space-between; margin-bottom: 8%; display: flex;">
             <ui:Button text="Start" name="StartButton" class="button" style="border-top-left-radius: 30px;"/>
             <ui:Button text="Options" name="OptionsButton" class="button"/>
             <ui:Button text="Exit" name="ExitButton" class="button"/>
@@ -19,9 +19,9 @@
             <ui:Button text="Back" name="ExitSelectionPopupButton" class="popupButton"/>
         </ui:VisualElement>
         <ui:VisualElement name="DifficultySelectionPopup" enabled="true" style="flex-grow: 1; position: absolute; background-color: rgb(168, 168, 168); top: 40%; left: 30%; align-self: center; justify-content: space-evenly; right: 0; bottom: 0; max-width: 40%; max-height: 50%; border-top-left-radius: 30px; border-top-right-radius: 30px; border-bottom-right-radius: 30px; border-bottom-left-radius: 30px; visibility: visible; display: none;">
-            <ui:Button text="Easy" name="EasyButton" class="popupButton"/>
-            <ui:Button text="Normal" name="NormalButton" class="popupButton"/>
-            <ui:Button text="Hard" name="HardButton" class="popupButton"/>
+            <ui:Button text="Easy (3x3)" name="EasyButton" class="popupButton"/>
+            <ui:Button text="Normal (5x5)" name="NormalButton" class="popupButton"/>
+            <ui:Button text="Hard (7x7)" name="HardButton" class="popupButton"/>
             <ui:Button text="Back" name="ExitDifficultyPopupButton" class="popupButton"/>
         </ui:VisualElement>
     </ui:VisualElement>

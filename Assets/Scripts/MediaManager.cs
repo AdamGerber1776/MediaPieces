@@ -35,6 +35,7 @@ public class MediaManager : MonoBehaviour
                 {
                     Debug.Log("File has a valid image extension: " + fileExtension);
                     LoadImage(filePath);
+                    PuzzleUIHandler.CloseLoadingScreen();
                 }
                 else if (validAnimatedImageExtensions.Contains(fileExtension))
                 {
@@ -147,6 +148,7 @@ public class MediaManager : MonoBehaviour
             // start function to make puzzle from this first frame
             PuzzleManager.CreatePuzzleFromImage(gifTextures[0].m_texture2d);
             gifPlaying = true;
+            PuzzleUIHandler.CloseLoadingScreen();
         }
     }
 }

@@ -1,3 +1,6 @@
+using System.Collections;
+using System.Collections.Generic;
+using System.IO;
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -12,9 +15,13 @@ public class PuzzleManager : MonoBehaviour
     private static float pieceHeight;
     private static float boardWidth;
     private static float boardHeight;
-    private static int difficulty = 3; //temporarily set difficulty value. to be determined by selection later
+    private static int difficulty;
 
     public static int[,] occupiedGridPositions;
+
+    //for handling highlighting and unhighlighting pieces
+    private static GameObject highlightPieceObject;
+    private static GameObject highlightBoardPieceObject;
 
     private void Awake()
     {
@@ -26,11 +33,13 @@ public class PuzzleManager : MonoBehaviour
         }
 
         Instance = this;
+        difficulty = GameState.Instance.selectedDifficulty;
     }
 
     public static void CreatePuzzleFromImage(Texture2D image)
     {
         Debug.Log("Creating puzzle from image of size: " + image.width + "x" + image.height);
+        Debug.Log("Creating puzzle of difficulty" + difficulty);
 
         occupiedGridPositions = new int[difficulty, difficulty];
         pieceWidth = image.width / 10f / difficulty;
@@ -171,6 +180,9 @@ public class PuzzleManager : MonoBehaviour
             for (int y = 0; y < difficulty; y++)
             {
                 GameObject boardPiece = new GameObject("PuzzleBoardPiece " + "x:" + x + " y:" + y);
+                PuzzleBoardPiece boardPieceData = boardPiece.AddComponent<PuzzleBoardPiece>();
+                boardPieceData.gridPosition = new Vector2Int(x, y);
+
                 Mesh mesh = new Mesh();
                 Vector3[] vertices =
                 {
@@ -240,14 +252,103 @@ public class PuzzleManager : MonoBehaviour
     public static void CheckPuzzleCompletion()
     {
         PuzzlePiece[] pieces = GameObject.FindObjectsByType<PuzzlePiece>();
+        bool allCorrect = true;
+        foreach (PuzzlePiece piece in pieces)
+        {
+            if (!piece.isPlacedCorrectly) allCorrect = false;
+            else if (piece.highlighted) 
+            {
+                Debug.Log("Clear Highlight");
+                ClearHighlight();
+            }
+        }
+        if (!allCorrect) return;
+        Debug.Log("Puzzle Completed!");
+        ClearHighlight();
+        PuzzleUIHandler.OnPuzzleCompletion();
+    }
+
+    public static PuzzlePiece GetHelpPiece()
+    {
+        PuzzlePiece[] pieces = FindObjectsByType<PuzzlePiece>(FindObjectsSortMode.None);
+        List<PuzzlePiece> availablePieces = new List<PuzzlePiece>();
+
         foreach (PuzzlePiece piece in pieces)
         {
             if (!piece.isPlacedCorrectly)
             {
-                return;
+                availablePieces.Add(piece);
             }
         }
-        Debug.Log("Puzzle Completed!");
-        PuzzleUIHandler.OnPuzzleCompletion();
+
+        if (availablePieces.Count == 0) return null;
+
+        int index = UnityEngine.Random.Range(0, availablePieces.Count);
+
+        return availablePieces[index];
+    }
+
+    //highlight a piece and its correct board location
+    public static void HighlightPiece(PuzzlePiece piece)
+    {
+        // Remove previous highlight
+        ClearHighlight();
+
+        if (piece == null) return;
+
+        // Create highlight object for puzzle piece
+        highlightPieceObject = GameObject.CreatePrimitive(PrimitiveType.Quad);
+        highlightPieceObject.name = "PuzzlePieceHighlight";
+        highlightPieceObject.transform.localScale = new Vector3(pieceWidth * 1.1f, pieceHeight * 1.1f, 1f);
+
+        highlightPieceObject.transform.SetParent(piece.transform);
+        highlightPieceObject.transform.localPosition = new Vector3(0f, 0f, 0.1f);
+
+        Renderer pieceRenderer = highlightPieceObject.GetComponent<Renderer>();
+        pieceRenderer.material.SetColor("_White", Color.yellow);
+        Destroy(highlightPieceObject.GetComponent<Collider>());
+        piece.highlighted = true;
+
+        //find board piece and create highlight object for it
+        PuzzleBoardPiece[] boardPieces = FindObjectsByType<PuzzleBoardPiece>(FindObjectsSortMode.None);
+
+        foreach (PuzzleBoardPiece boardPiece in boardPieces)
+        {
+            if (boardPiece.gridPosition == piece.correctGridPosition)
+            {
+                highlightBoardPieceObject = GameObject.CreatePrimitive(PrimitiveType.Quad);
+                highlightBoardPieceObject.name = "BoardPieceHighlight";
+                highlightBoardPieceObject.transform.localScale = new Vector3(pieceWidth * 0.75f, pieceHeight * 0.75f, 1f);
+
+                highlightBoardPieceObject.transform.position = 
+                new Vector3(
+                    boardPiece.transform.position.x, 
+                    boardPiece.transform.position.y, 
+                    boardPiece.transform.position.z - 1.1f
+                    );
+
+                Renderer boardPieceRenderer = highlightBoardPieceObject.GetComponent<Renderer>();
+                boardPieceRenderer.material.SetColor("_White", Color.yellow);
+                Destroy(highlightBoardPieceObject.GetComponent<Collider>());
+                boardPiece.highlighted = true;
+            }
+        }
+    }
+
+    //clear highlight on piece and board
+    public static void ClearHighlight()
+    {
+        if (highlightPieceObject != null)
+        {
+            Destroy(highlightPieceObject);
+
+            highlightPieceObject = null;
+        }
+        if (highlightBoardPieceObject != null)
+        {
+            Destroy(highlightBoardPieceObject);
+
+            highlightBoardPieceObject = null;
+        }
     }
 }
