@@ -23,6 +23,7 @@ public class MainMenuHandler : MonoBehaviour
     //initialize visual elements
     private VisualElement _fileSelectionPopup;
     private VisualElement _difficultySelectionPopup;
+    private VisualElement _loadingScreen;
 
     private void Awake()
     {
@@ -44,6 +45,7 @@ public class MainMenuHandler : MonoBehaviour
         //gets ui visual elements (primarily for popup screens)
         _fileSelectionPopup = _document.rootVisualElement.Q("FileSelectionPopup") as VisualElement;
         _difficultySelectionPopup = _document.rootVisualElement.Q("DifficultySelectionPopup") as VisualElement;
+        _loadingScreen = _document.rootVisualElement.Q("LoadingScreen") as VisualElement;
 
         //Registers events for clicking each button
         _startButton.RegisterCallback<ClickEvent>(OnStartButtonPress);
@@ -117,6 +119,7 @@ public class MainMenuHandler : MonoBehaviour
     private void OnEasyButtonPress(ClickEvent evt)
     {
         Debug.Log("Easy Button Pressed");
+        _loadingScreen.style.display = DisplayStyle.Flex;
         SceneManager.LoadScene("PuzzleScene");
     }
 
@@ -124,6 +127,7 @@ public class MainMenuHandler : MonoBehaviour
     private void OnNormalButtonPress(ClickEvent evt)
     {
         Debug.Log("Normal Button Pressed");
+        _loadingScreen.style.display = DisplayStyle.Flex;
         SceneManager.LoadScene("PuzzleScene");
     }
 
@@ -131,6 +135,7 @@ public class MainMenuHandler : MonoBehaviour
     private void OnHardButtonPress(ClickEvent evt)
     {
         Debug.Log("Hard Button Pressed");
+        _loadingScreen.style.display = DisplayStyle.Flex;
         SceneManager.LoadScene("PuzzleScene");
     }
 

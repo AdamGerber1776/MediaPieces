@@ -75,7 +75,7 @@ public class CameraHandler : MonoBehaviour
     //handles the wasd camera movement, panning, and zooming
     private void HandleMovement()
     {
-        float moveSpeed = 50f;
+        float moveSpeed = camera.orthographicSize;
         Vector2 input = moveAction.action.ReadValue<Vector2>();
 
         Vector3 movement =
@@ -86,7 +86,7 @@ public class CameraHandler : MonoBehaviour
     }
     private void HandlePan()
     {
-        float panSpeed = 0.1f;
+        float panSpeed = camera.orthographicSize * 0.005f;
         if (panAction.action.IsPressed())
         {
             Vector2 mouseDelta = mouseMovementAction.action.ReadValue<Vector2>();
@@ -96,11 +96,11 @@ public class CameraHandler : MonoBehaviour
     }
     private void HandleZoom()
     {
-        float zoomSpeed = 5f;
+        float zoomSpeed = camera.orthographicSize * 0.1f;
         float zoom = zoomAction.action.ReadValue<Vector2>().y;
 
         camera.orthographicSize -= zoom * zoomSpeed;
-        camera.orthographicSize = Mathf.Clamp(camera.orthographicSize, 1f, 100f);
+        camera.orthographicSize = Mathf.Clamp(camera.orthographicSize, 1f, 100000f);
     }
 
     private void HandlePieceDragging()
