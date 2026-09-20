@@ -270,6 +270,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PuzzleManager
   cellMaterial: {fileID: 2100000, guid: 8b692b681d1806f45b30a8ebdfeb4dcb, type: 2}
   gridMaterial: {fileID: 2100000, guid: eea73afda32a49144a806b16de4bf9b0, type: 2}
+  puzzleMaterial: {fileID: 2100000, guid: 9db543a7408485a47b4e69ce256d0eb2, type: 2}
 --- !u!1 &1531717077
 GameObject:
   m_ObjectHideFlags: 0

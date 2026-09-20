@@ -18,7 +18,7 @@ public class PuzzleUIHandler : MonoBehaviour
     private static VisualElement _puzzleCompletePopup;
 
     //handling variables for moving PuzzleCompletePopup
-    private bool isDragging;
+    public static bool isDragging = false;
     private Vector3 pointerStartPosition;
     private Vector2 popupStartPosition;
 
