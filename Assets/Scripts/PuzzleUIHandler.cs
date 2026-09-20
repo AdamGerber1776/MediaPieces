@@ -16,6 +16,8 @@ public class PuzzleUIHandler : MonoBehaviour
 
     //initialize visual elements
     private static VisualElement _puzzleCompletePopup;
+    private static VisualElement _loadingScreen;
+
 
     //handling variables for moving PuzzleCompletePopup
     public static bool isDragging = false;
@@ -35,6 +37,7 @@ public class PuzzleUIHandler : MonoBehaviour
 
         //gets ui visual elemetns
         _puzzleCompletePopup = _document.rootVisualElement.Q("PuzzleCompletePopup") as VisualElement;
+        _loadingScreen = _document.rootVisualElement.Q("LoadingScreen") as VisualElement;
 
         //Registers events for clicking each button
         _skipButton.RegisterCallback<ClickEvent>(OnSkipButtonPress);
@@ -124,5 +127,10 @@ public class PuzzleUIHandler : MonoBehaviour
         isDragging = false;
 
         _puzzleCompletePopup.ReleasePointer(evt.pointerId);
+    }
+
+    public static void CloseLoadingScreen()
+    {
+        _loadingScreen.style.display = DisplayStyle.None;
     }
 }
