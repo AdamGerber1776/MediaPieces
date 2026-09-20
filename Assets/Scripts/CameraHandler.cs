@@ -100,7 +100,7 @@ public class CameraHandler : MonoBehaviour
         float zoom = zoomAction.action.ReadValue<Vector2>().y;
 
         camera.orthographicSize -= zoom * zoomSpeed;
-        camera.orthographicSize = Mathf.Clamp(camera.orthographicSize, 1f, 100f);
+        camera.orthographicSize = Mathf.Clamp(camera.orthographicSize, 1f, 1000f);
     }
 
     private void HandlePieceDragging()
