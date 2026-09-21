@@ -4,6 +4,7 @@ using System.IO;
 using UnityEngine;
 using System.Linq;
 using UnityEngine.Video;
+using UnityEngine.SceneManagement;
 
 public class MediaManager : MonoBehaviour
 {
@@ -127,6 +128,7 @@ public class MediaManager : MonoBehaviour
         videoPlayer.Prepare();
 
         videoPlayer.prepareCompleted += OnVideoPrepared;
+        videoPlayer.errorReceived += OnVideoError;
     }
 
     // to load gifs into a list of frames
@@ -178,5 +180,13 @@ public class MediaManager : MonoBehaviour
         PuzzleManager.Instance.puzzleMaterial.mainTexture = player.texture;
         PuzzleUIHandler.CloseLoadingScreen();
         player.Play();
+    }
+
+    private void OnVideoError(VideoPlayer player, string message)
+    {
+        Debug.Log("VideoPlayer error: " + message);
+        Debug.Log("The video codec may not be supported.");
+
+        SceneManager.LoadScene("MainMenuScene");
     }
 }
