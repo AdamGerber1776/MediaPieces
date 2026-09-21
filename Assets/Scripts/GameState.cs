@@ -8,7 +8,7 @@ public class GameState : MonoBehaviour
     //file path to be used in puzzle scene
     public string selectedFilePath;
     public int selectedDifficulty;
-    public string[] selectedFolderPaths;
+    public List<string> selectedFolderPaths = new List<string>();
     public List<string> selectedFilePaths = new List<string>();
     
     private void Awake()

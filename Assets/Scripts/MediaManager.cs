@@ -40,7 +40,7 @@ public class MediaManager : MonoBehaviour
 
     void Start()
     {
-        if(GameState.Instance.selectedFolderPaths.Length > 0)
+        if(GameState.Instance.selectedFolderPaths.Count > 0)
         {
             //get all file paths
             foreach (string folderPath in GameState.Instance.selectedFolderPaths)
