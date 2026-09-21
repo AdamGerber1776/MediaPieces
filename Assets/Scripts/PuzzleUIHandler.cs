@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEngine.SceneManagement;
 using System;
+using System.Collections.Generic;
 
 public class PuzzleUIHandler : MonoBehaviour
 {
@@ -93,6 +94,10 @@ public class PuzzleUIHandler : MonoBehaviour
     private void OnMenuButtonPress(ClickEvent evt)
     {
         Debug.Log("Menu Button Pressed");
+        GameState.Instance.selectedFilePath = "";
+        GameState.Instance.selectedFolderPaths = new List<string>();
+        GameState.Instance.selectedFilePaths = new List<string>();
+        SceneManager.LoadScene("MainMenuScene");
     }
 
     public static void OnPuzzleCompletion()
