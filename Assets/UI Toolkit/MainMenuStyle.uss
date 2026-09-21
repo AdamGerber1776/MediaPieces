@@ -67,7 +67,7 @@
     border-bottom-color: rgb(82, 82, 82);
     max-width: none;
     min-width: auto;
-    width: 70%;
+    width: 75%;
     padding-top: 2%;
     padding-bottom: 2%;
 }

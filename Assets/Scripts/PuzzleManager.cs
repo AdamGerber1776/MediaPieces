@@ -17,6 +17,8 @@ public class PuzzleManager : MonoBehaviour
     private static float boardWidth;
     private static float boardHeight;
     private static int difficulty;
+    private static int columns;
+    private static int rows;
 
     public static int[,] occupiedGridPositions;
 
@@ -40,13 +42,28 @@ public class PuzzleManager : MonoBehaviour
     public static void CreatePuzzle(int width, int height)
     {
         Debug.Log("Creating puzzle from image of size: " + width + "x" + height);
-        Debug.Log("Creating puzzle of difficulty" + difficulty);
+        Debug.Log("Creating puzzle of difficulty " + difficulty);
 
-        occupiedGridPositions = new int[difficulty, difficulty];
-        pieceWidth = width / 10f / difficulty;
-        pieceHeight = height / 10f / difficulty;
-        float pieceWidthPercent = 1.0f / difficulty;
-        float pieceHeightPercent = 1.0f / difficulty;
+        float aspectRatio = (float)width / height;
+        int maxPiecesInOneDimension = difficulty * 2;
+        if (aspectRatio >= 1f)
+        {
+            columns = Mathf.RoundToInt(difficulty * aspectRatio);
+            columns = Mathf.Clamp(columns, 1, maxPiecesInOneDimension);
+            rows = difficulty;
+        }
+        else
+        {
+            columns = difficulty;
+            rows = Mathf.RoundToInt(difficulty / aspectRatio);
+            rows = Mathf.Clamp(rows, 1, maxPiecesInOneDimension);
+        }
+
+        occupiedGridPositions = new int[columns, rows];
+        pieceWidth = width / 10f / columns;
+        pieceHeight = height / 10f / rows;
+        float pieceWidthPercent = 1.0f / columns;
+        float pieceHeightPercent = 1.0f / rows;
         Instance.BuildBoard();
 
         //variables to determine piece random placement location
@@ -56,9 +73,9 @@ public class PuzzleManager : MonoBehaviour
         float piecesSpace = pieceWidth * 2f; //size of the space in which the pieces can be placed on either side of the board
 
         //creates the puzzle pieces and places them around the board
-        for (int x = 0; x < difficulty; x++)
+        for (int x = 0; x < columns; x++)
         {
-            for (int y = 0; y < difficulty; y++)
+            for (int y = 0; y < rows; y++)
             {
                 GameObject piece = new GameObject("PuzzlePiece " + "x:" + x + " y:" + y);
                 piece.transform.SetParent(Instance.puzzle);
@@ -129,8 +146,8 @@ public class PuzzleManager : MonoBehaviour
 
     private void BuildBoard()
     {
-        boardWidth = pieceWidth * difficulty;
-        boardHeight = pieceHeight * difficulty;
+        boardWidth = pieceWidth * columns;
+        boardHeight = pieceHeight * rows;
         float gridGap;
 
         //gap between pieces of the board to create the grid
@@ -178,9 +195,9 @@ public class PuzzleManager : MonoBehaviour
         );
 
         //creates the puzzle board
-        for (int x = 0; x < difficulty; x++)
+        for (int x = 0; x < columns; x++)
         {
-            for (int y = 0; y < difficulty; y++)
+            for (int y = 0; y < rows; y++)
             {
                 GameObject boardPiece = new GameObject("PuzzleBoardPiece " + "x:" + x + " y:" + y);
                 boardPiece.transform.SetParent(puzzle);
@@ -240,11 +257,11 @@ public class PuzzleManager : MonoBehaviour
         int x = Mathf.RoundToInt(gridX);
         int y = Mathf.RoundToInt(gridY);
         
-        if (x < 0 || x >= difficulty)
+        if (x < 0 || x >= columns)
         {
             x = -1;
         }
-        if (y < 0 || y >= difficulty)
+        if (y < 0 || y >= rows)
         {
             y = -1;
         }
