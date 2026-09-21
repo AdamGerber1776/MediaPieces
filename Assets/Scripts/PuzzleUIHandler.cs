@@ -71,6 +71,7 @@ public class PuzzleUIHandler : MonoBehaviour
         if (GameState.Instance.selectedFilePaths.Count > 0)
         {
             OpenLoadingScreen();
+            PuzzleManager.ClearHighlight();
             PuzzleManager.ClearPuzzle();
             MediaManager.Instance.ChooseFilePath();
             MediaManager.Instance.LoadPuzzleFile();

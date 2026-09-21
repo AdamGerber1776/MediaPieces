@@ -342,6 +342,11 @@ public class PuzzleManager : MonoBehaviour
     //clear highlight on piece and board
     public static void ClearHighlight()
     {
+        PuzzlePiece[] pieces = GameObject.FindObjectsByType<PuzzlePiece>();
+        foreach (PuzzlePiece piece in pieces)
+        {
+            if (piece.highlighted) piece.highlighted = false;
+        }
         if (highlightPieceObject != null)
         {
             Destroy(highlightPieceObject);
