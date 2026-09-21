@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using System.Linq;
+using UnityEngine.Video;
 
 public class MediaManager : MonoBehaviour
 {
@@ -17,6 +18,8 @@ public class MediaManager : MonoBehaviour
     private int gifFrame;
     private List<UniGif.GifTexture> gifTextures;
 
+    //variables to handle video playing
+    private VideoPlayer videoPlayer;
 
     void Start()
     {
@@ -92,7 +95,7 @@ public class MediaManager : MonoBehaviour
             // set puzzle texture to image
             PuzzleManager.Instance.puzzleMaterial.mainTexture = texture;
             // start function to make puzzle from image
-            PuzzleManager.CreatePuzzleFromImage(texture);
+            PuzzleManager.CreatePuzzle(texture.width, texture.height);
         }
         else
         {
@@ -110,6 +113,20 @@ public class MediaManager : MonoBehaviour
     private void LoadVideo(string filePath)
     {
         Debug.Log("Loading video from file: " + filePath);
+        GameObject videoObject = new GameObject("VideoPlayer");
+
+        videoPlayer = videoObject.AddComponent<VideoPlayer>();
+
+        videoPlayer.url = filePath;
+
+        videoPlayer.renderMode = VideoRenderMode.APIOnly;
+
+        videoPlayer.playOnAwake = false;
+        videoPlayer.isLooping = true;
+
+        videoPlayer.Prepare();
+
+        videoPlayer.prepareCompleted += OnVideoPrepared;
     }
 
     // to load gifs into a list of frames
@@ -146,9 +163,20 @@ public class MediaManager : MonoBehaviour
             // set puzzle texture to first frame of animated image
             PuzzleManager.Instance.puzzleMaterial.mainTexture = gifTextures[0].m_texture2d;
             // start function to make puzzle from this first frame
-            PuzzleManager.CreatePuzzleFromImage(gifTextures[0].m_texture2d);
+            PuzzleManager.CreatePuzzle(gifTextures[0].m_texture2d.width, gifTextures[0].m_texture2d.height);
             gifPlaying = true;
             PuzzleUIHandler.CloseLoadingScreen();
         }
+    }
+
+    private void OnVideoPrepared(VideoPlayer player)
+    {
+        Debug.Log("Video prepared!");
+        Debug.Log("Video dimensions: " + player.width + " x " + player.height);
+        
+        PuzzleManager.CreatePuzzle((int)player.width, (int)player.height);
+        PuzzleManager.Instance.puzzleMaterial.mainTexture = player.texture;
+        PuzzleUIHandler.CloseLoadingScreen();
+        player.Play();
     }
 }

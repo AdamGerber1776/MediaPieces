@@ -36,14 +36,14 @@ public class PuzzleManager : MonoBehaviour
         difficulty = GameState.Instance.selectedDifficulty;
     }
 
-    public static void CreatePuzzleFromImage(Texture2D image)
+    public static void CreatePuzzle(int width, int height)
     {
-        Debug.Log("Creating puzzle from image of size: " + image.width + "x" + image.height);
+        Debug.Log("Creating puzzle from image of size: " + width + "x" + height);
         Debug.Log("Creating puzzle of difficulty" + difficulty);
 
         occupiedGridPositions = new int[difficulty, difficulty];
-        pieceWidth = image.width / 10f / difficulty;
-        pieceHeight = image.height / 10f / difficulty;
+        pieceWidth = width / 10f / difficulty;
+        pieceHeight = height / 10f / difficulty;
         float pieceWidthPercent = 1.0f / difficulty;
         float pieceHeightPercent = 1.0f / difficulty;
         Instance.BuildBoard();
@@ -120,7 +120,7 @@ public class PuzzleManager : MonoBehaviour
                         );
                         break;
                 }
-                Collider2D collider = piece.AddComponent<BoxCollider2D>();
+                piece.AddComponent<BoxCollider2D>();
             }
         }
     }
