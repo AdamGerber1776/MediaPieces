@@ -14,57 +14,47 @@ public class MediaManager : MonoBehaviour
     private readonly string[] validVideoExtensions = { ".mp4" };
 
     //variables to handle gif playing
-    private bool gifPlaying = false;
+    public static bool gifPlaying = false;
     private float frameDelayTime;
     private int gifFrame;
     private List<UniGif.GifTexture> gifTextures;
 
     //variables to handle video playing
-    private VideoPlayer videoPlayer;
+    public GameObject videoPlayerObject;
+    public VideoPlayer videoPlayer;
+
+    public static MediaManager Instance;
+
+    private void Awake()
+    {
+        //helps prevent the possibility of having two competing instances of this class
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        Instance = this;
+        //keeps the game state object from being destroyed when loading a new scene
+    }
 
     void Start()
     {
-        //checks the file path for validity and determines what function to use to load the media
-        if (GameState.Instance.selectedFilePath != "" && GameState.Instance.selectedFilePath != null)
+        if(GameState.Instance.selectedFolderPaths.Length > 0)
         {
-            string filePath = GameState.Instance.selectedFilePath;
-            Debug.Log("Loaded file path: " + filePath);
-            //checks if the file exists at the specified path
-            if (System.IO.File.Exists(filePath))
+            //get all file paths
+            foreach (string folderPath in GameState.Instance.selectedFolderPaths)
             {
-                Debug.Log("File exists");
-                // Check if the file has a valid image extension
-                string fileExtension = System.IO.Path.GetExtension(filePath).ToLower();
-                if (validImageExtensions.Contains(fileExtension))
+                List<string> filepaths = GetAllFilePaths(folderPath);
+                foreach (string filePath in filepaths)
                 {
-                    Debug.Log("File has a valid image extension: " + fileExtension);
-                    LoadImage(filePath);
-                    PuzzleUIHandler.CloseLoadingScreen();
-                }
-                else if (validAnimatedImageExtensions.Contains(fileExtension))
-                {
-                    Debug.Log("File has a valid animated image extension: " + fileExtension);
-                    LoadAnimatedImage(filePath);
-                }
-                else if (validVideoExtensions.Contains(fileExtension))
-                {
-                    Debug.Log("File has a valid video extension: " + fileExtension);
-                    LoadVideo(filePath);
-                }
-                else
-                {
-                    Debug.LogWarning("File does not have a valid extension: " + fileExtension);
+                    GameState.Instance.selectedFilePaths.Add(filePath);
                 }
             }
-            else
-            {
-                Debug.LogWarning("File does not exist at path: " + filePath);
-            }
+            Debug.Log(GameState.Instance.selectedFilePaths.Count + " valid file paths saved in gamestate.");
+            ChooseFilePath();
         }
-        else
-        {
-            Debug.LogWarning("GameState instance filepath is null or empty.");
-        }
+        LoadPuzzleFile();
     }
 
     void Update()
@@ -114,9 +104,9 @@ public class MediaManager : MonoBehaviour
     private void LoadVideo(string filePath)
     {
         Debug.Log("Loading video from file: " + filePath);
-        GameObject videoObject = new GameObject("VideoPlayer");
+        videoPlayerObject = new GameObject("VideoPlayer");
 
-        videoPlayer = videoObject.AddComponent<VideoPlayer>();
+        videoPlayer = videoPlayerObject.AddComponent<VideoPlayer>();
 
         videoPlayer.url = filePath;
 
@@ -161,13 +151,13 @@ public class MediaManager : MonoBehaviour
             Debug.Log("First frame delay: " + textures[0].m_delaySec);
             Debug.Log("First frame texture: " + textures[0].m_texture2d);
             gifTextures = textures;
-            frameDelayTime = Time.time + textures[0].m_delaySec;
+            frameDelayTime = textures[0].m_delaySec;
             // set puzzle texture to first frame of animated image
             PuzzleManager.Instance.puzzleMaterial.mainTexture = gifTextures[0].m_texture2d;
             // start function to make puzzle from this first frame
             PuzzleManager.CreatePuzzle(gifTextures[0].m_texture2d.width, gifTextures[0].m_texture2d.height);
-            gifPlaying = true;
             PuzzleUIHandler.CloseLoadingScreen();
+            gifPlaying = true;
         }
     }
 
@@ -187,6 +177,97 @@ public class MediaManager : MonoBehaviour
         Debug.Log("VideoPlayer error: " + message);
         Debug.Log("The video codec may not be supported.");
 
-        SceneManager.LoadScene("MainMenuScene");
+        if (GameState.Instance.selectedFilePaths.Count > 0)
+        {
+            PuzzleUIHandler.OpenLoadingScreen();
+            PuzzleManager.ClearPuzzle();
+            ChooseFilePath();
+            LoadPuzzleFile();
+        }
+        else
+        {
+            Debug.Log("No more file paths to load. Returning to menu.");
+            SceneManager.LoadScene("MainMenuScene");
+        }
+    }
+
+    //search for all files in the folder and all subfolders
+    private List<string> GetAllFilePaths(string folderPath)
+    {
+        List<string> filePaths = new List<string>();
+
+        foreach (string filePath in Directory.EnumerateFiles(folderPath, "*", SearchOption.AllDirectories))
+        {
+            string fileExtension = System.IO.Path.GetExtension(filePath).ToLower();
+            if (validImageExtensions.Contains(fileExtension) || 
+                validAnimatedImageExtensions.Contains(fileExtension) || 
+                validVideoExtensions.Contains(fileExtension))
+            {
+                filePaths.Add(filePath);
+            }
+        }
+
+        return filePaths;
+    }
+
+    public void ChooseFilePath()
+    {
+        if (GameState.Instance.selectedFilePaths.Count > 0)
+        {
+            int randomIndex = Random.Range(0, GameState.Instance.selectedFilePaths.Count);
+            string selectedPath = GameState.Instance.selectedFilePaths[randomIndex];
+            GameState.Instance.selectedFilePath = selectedPath;
+            GameState.Instance.selectedFilePaths.RemoveAt(randomIndex);
+        }
+        else
+        {
+            Debug.Log("No file paths remaining. Returning to Menu");
+            SceneManager.LoadScene("MainMenuScene");
+        }
+    }
+
+    public void LoadPuzzleFile()
+    {
+        //checks the file path for validity and determines what function to use to load the media
+        if (GameState.Instance.selectedFilePath != "" && GameState.Instance.selectedFilePath != null)
+        {
+            string filePath = GameState.Instance.selectedFilePath;
+            Debug.Log("Loaded file path: " + filePath);
+            //checks if the file exists at the specified path
+            if (System.IO.File.Exists(filePath))
+            {
+                Debug.Log("File exists");
+                // Check if the file has a valid image extension
+                string fileExtension = System.IO.Path.GetExtension(filePath).ToLower();
+                if (validImageExtensions.Contains(fileExtension))
+                {
+                    Debug.Log("File has a valid image extension: " + fileExtension);
+                    LoadImage(filePath);
+                    PuzzleUIHandler.CloseLoadingScreen();
+                }
+                else if (validAnimatedImageExtensions.Contains(fileExtension))
+                {
+                    Debug.Log("File has a valid animated image extension: " + fileExtension);
+                    LoadAnimatedImage(filePath);
+                }
+                else if (validVideoExtensions.Contains(fileExtension))
+                {
+                    Debug.Log("File has a valid video extension: " + fileExtension);
+                    LoadVideo(filePath);
+                }
+                else
+                {
+                    Debug.LogWarning("File does not have a valid extension: " + fileExtension);
+                }
+            }
+            else
+            {
+                Debug.LogWarning("File does not exist at path: " + filePath);
+            }
+        }
+        else
+        {
+            Debug.LogWarning("GameState instance filepath is null or empty.");
+        }
     }
 }

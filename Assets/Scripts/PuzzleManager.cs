@@ -9,6 +9,7 @@ public class PuzzleManager : MonoBehaviour
     [SerializeField] private Material cellMaterial;
     [SerializeField] private Material gridMaterial;
     [SerializeField] public Material puzzleMaterial;
+    [SerializeField] private Transform puzzle;
 
     public static PuzzleManager Instance;
     private static float pieceWidth;
@@ -60,6 +61,7 @@ public class PuzzleManager : MonoBehaviour
             for (int y = 0; y < difficulty; y++)
             {
                 GameObject piece = new GameObject("PuzzlePiece " + "x:" + x + " y:" + y);
+                piece.transform.SetParent(Instance.puzzle);
                 PuzzlePiece puzzlePiece = piece.AddComponent<PuzzlePiece>();
                 puzzlePiece.correctGridPosition = new Vector2Int(x, y);
                 puzzlePiece.currentGridPosition = new Vector2Int(-1, -1);
@@ -150,6 +152,7 @@ public class PuzzleManager : MonoBehaviour
 
         //Creates the board grid
         GameObject boardGrid = new GameObject("PuzzleBoardGrid");
+        boardGrid.transform.SetParent(puzzle);
         Mesh gridMesh = new Mesh();
         Vector3[] gridVertices =
         {
@@ -180,6 +183,7 @@ public class PuzzleManager : MonoBehaviour
             for (int y = 0; y < difficulty; y++)
             {
                 GameObject boardPiece = new GameObject("PuzzleBoardPiece " + "x:" + x + " y:" + y);
+                boardPiece.transform.SetParent(puzzle);
                 PuzzleBoardPiece boardPieceData = boardPiece.AddComponent<PuzzleBoardPiece>();
                 boardPieceData.gridPosition = new Vector2Int(x, y);
 
@@ -349,6 +353,20 @@ public class PuzzleManager : MonoBehaviour
             Destroy(highlightBoardPieceObject);
 
             highlightBoardPieceObject = null;
+        }
+    }
+
+    public static void ClearPuzzle()
+    {
+        foreach (Transform child in Instance.puzzle)
+        {
+            Destroy(child.gameObject);
+        }
+
+        if (MediaManager.Instance.videoPlayerObject != null)
+        {
+            Destroy(MediaManager.Instance.videoPlayerObject);
+            MediaManager.Instance.videoPlayer = null;
         }
     }
 }

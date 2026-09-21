@@ -68,7 +68,19 @@ public class PuzzleUIHandler : MonoBehaviour
     private void OnSkipButtonPress(ClickEvent evt)
     {
         Debug.Log("Skip Button Pressed");
-        SceneManager.LoadScene("MainMenuScene");
+        if (GameState.Instance.selectedFilePaths.Count > 0)
+        {
+            OpenLoadingScreen();
+            PuzzleManager.ClearPuzzle();
+            MediaManager.Instance.ChooseFilePath();
+            MediaManager.Instance.LoadPuzzleFile();
+            MediaManager.gifPlaying = false;
+        }
+        else
+        {
+            Debug.Log("No more file paths to load. Returning to menu.");
+            SceneManager.LoadScene("MainMenuScene");
+        }
     }
 
     private void OnHintButtonPress(ClickEvent evt)
@@ -132,5 +144,10 @@ public class PuzzleUIHandler : MonoBehaviour
     public static void CloseLoadingScreen()
     {
         _loadingScreen.style.display = DisplayStyle.None;
+    }
+
+    public static void OpenLoadingScreen()
+    {
+        _loadingScreen.style.display = DisplayStyle.Flex;
     }
 }

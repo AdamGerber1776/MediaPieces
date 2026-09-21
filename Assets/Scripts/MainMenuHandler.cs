@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using SFB;
 using UnityEngine.SceneManagement;
+using System.Collections.Generic;
 
 public class MainMenuHandler : MonoBehaviour
 {
@@ -106,6 +107,7 @@ public class MainMenuHandler : MonoBehaviour
     private void OnSelectFolderButtonPress(ClickEvent evt)
     {
         Debug.Log("Select folder Button Pressed");
+        SelectFolder();
     }
 
     //returns to the main menu
@@ -173,6 +175,28 @@ public class MainMenuHandler : MonoBehaviour
         else
         {
             Debug.Log("Error, No Path Selected");
+        }
+    }
+
+    public void SelectFolder()
+    {
+        string[] folderPath = StandaloneFileBrowser.OpenFolderPanel(
+            "Select Folder",
+            "",
+            false
+        );
+
+        if (!string.IsNullOrEmpty(folderPath[0]))
+        {
+            Debug.Log("Selected folder: " + folderPath);
+            GameState.Instance.selectedFolderPaths = folderPath;
+            Debug.Log("Saved folder paths: " + GameState.Instance.selectedFolderPaths[0] + ", ...");
+            Debug.Log(GameState.Instance.selectedFolderPaths.Length + " valid folder paths saved in gamestate.");
+            _difficultySelectionPopup.style.display = DisplayStyle.Flex;
+        }
+        else
+        {
+            Debug.Log("Error no folder path selected");
         }
     }
 }
