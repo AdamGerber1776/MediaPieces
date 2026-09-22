@@ -256,6 +256,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4cfc99943b61cca47a4766de31c41a13, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PuzzleManager
+  videoPlayerObject: {fileID: 0}
+  videoPlayer: {fileID: 0}
 --- !u!114 &461126211
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -272,6 +274,7 @@ MonoBehaviour:
   gridMaterial: {fileID: 2100000, guid: eea73afda32a49144a806b16de4bf9b0, type: 2}
   puzzleMaterial: {fileID: 2100000, guid: 9db543a7408485a47b4e69ce256d0eb2, type: 2}
   puzzle: {fileID: 1476990927}
+  highlightMaterial: {fileID: 2100000, guid: fc832cd871c76324ca49d6737f60e6b2, type: 2}
 --- !u!1 &1476990926
 GameObject:
   m_ObjectHideFlags: 0

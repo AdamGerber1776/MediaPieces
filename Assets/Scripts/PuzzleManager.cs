@@ -10,6 +10,7 @@ public class PuzzleManager : MonoBehaviour
     [SerializeField] private Material gridMaterial;
     [SerializeField] public Material puzzleMaterial;
     [SerializeField] private Transform puzzle;
+    [SerializeField] private Material highlightMaterial;
 
     public static PuzzleManager Instance;
     private static float pieceWidth;
@@ -326,7 +327,7 @@ public class PuzzleManager : MonoBehaviour
         highlightPieceObject.transform.localPosition = new Vector3(0f, 0f, 0.1f);
 
         Renderer pieceRenderer = highlightPieceObject.GetComponent<Renderer>();
-        pieceRenderer.material.SetColor("_White", Color.yellow);
+        pieceRenderer.material = Instance.highlightMaterial;
         Destroy(highlightPieceObject.GetComponent<Collider>());
         piece.highlighted = true;
 
@@ -349,7 +350,7 @@ public class PuzzleManager : MonoBehaviour
                     );
 
                 Renderer boardPieceRenderer = highlightBoardPieceObject.GetComponent<Renderer>();
-                boardPieceRenderer.material.SetColor("_White", Color.yellow);
+                boardPieceRenderer.material = Instance.highlightMaterial;
                 Destroy(highlightBoardPieceObject.GetComponent<Collider>());
                 boardPiece.highlighted = true;
             }
