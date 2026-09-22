@@ -116,6 +116,7 @@ public class PuzzleUIHandler : MonoBehaviour
             MediaManager.Instance.ChooseFilePath();
             MediaManager.Instance.LoadPuzzleFile();
             MediaManager.gifPlaying = false;
+            _puzzleCompletePopup.style.display = DisplayStyle.None;
         }
         else
         {
