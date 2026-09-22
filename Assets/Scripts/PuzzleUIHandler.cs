@@ -108,7 +108,20 @@ public class PuzzleUIHandler : MonoBehaviour
     private void OnNextPuzzleButtonPress(ClickEvent evt)
     {
         Debug.Log("Next puzzle button pressed");
-        SceneManager.LoadScene("MainMenuScene");
+        if (GameState.Instance.selectedFilePaths.Count > 0)
+        {
+            OpenLoadingScreen();
+            PuzzleManager.ClearHighlight();
+            PuzzleManager.ClearPuzzle();
+            MediaManager.Instance.ChooseFilePath();
+            MediaManager.Instance.LoadPuzzleFile();
+            MediaManager.gifPlaying = false;
+        }
+        else
+        {
+            Debug.Log("No more file paths to load. Returning to menu.");
+            SceneManager.LoadScene("MainMenuScene");
+        }
     }
 
     //when popup clicked
