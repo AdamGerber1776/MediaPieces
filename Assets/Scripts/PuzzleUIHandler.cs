@@ -76,7 +76,6 @@ public class PuzzleUIHandler : MonoBehaviour
             PuzzleManager.ClearPuzzle();
             MediaManager.Instance.ChooseFilePath();
             MediaManager.Instance.LoadPuzzleFile();
-            MediaManager.gifPlaying = false;
         }
         else
         {
@@ -115,7 +114,6 @@ public class PuzzleUIHandler : MonoBehaviour
             PuzzleManager.ClearPuzzle();
             MediaManager.Instance.ChooseFilePath();
             MediaManager.Instance.LoadPuzzleFile();
-            MediaManager.gifPlaying = false;
             _puzzleCompletePopup.style.display = DisplayStyle.None;
         }
         else

@@ -14,7 +14,7 @@ public class MediaManager : MonoBehaviour
     private readonly string[] validVideoExtensions = { ".mp4" };
 
     //variables to handle gif playing
-    public static bool gifPlaying = false;
+    public bool gifPlaying = false;
     private float frameDelayTime;
     private int gifFrame;
     private List<UniGif.GifTexture> gifTextures;

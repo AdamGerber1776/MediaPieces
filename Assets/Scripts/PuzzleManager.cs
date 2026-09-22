@@ -391,5 +391,7 @@ public class PuzzleManager : MonoBehaviour
             Destroy(MediaManager.Instance.videoPlayerObject);
             MediaManager.Instance.videoPlayer = null;
         }
+
+        MediaManager.Instance.gifPlaying = false;
     }
 }
