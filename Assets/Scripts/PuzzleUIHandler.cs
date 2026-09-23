@@ -135,7 +135,7 @@ public class PuzzleUIHandler : MonoBehaviour
         }
         else
         {
-            Debug.Log("No more file paths to load. Returning to menu.");
+            OpenErrorPopup("No more file paths to load. Returning to menu.");
             SceneManager.LoadScene("MainMenuScene");
         }
     }
