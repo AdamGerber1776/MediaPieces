@@ -42,6 +42,7 @@ public class GameState : MonoBehaviour
     public void UpdateVolume(float newVal)
     {
         volume = newVal;
+        MediaManager.Instance.videoPlayer.SetDirectAudioVolume(0, GameState.Instance.volume);
         PlayerPrefs.SetFloat("Volume", newVal);
         PlayerPrefs.Save();
     }

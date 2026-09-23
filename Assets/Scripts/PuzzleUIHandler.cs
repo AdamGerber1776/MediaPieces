@@ -17,11 +17,13 @@ public class PuzzleUIHandler : MonoBehaviour
     private Button _exitSettingsButton;
     private Button _returnToMenuButton;
     private Button _puzzleCompleteExitButton;
+    private static Button _errorPopupExitButton;
 
     //initialize visual elements
     private static VisualElement _puzzleCompletePopup;
     private static VisualElement _loadingScreen;
     private static VisualElement _settingsMenu;
+    private static VisualElement _errorPopup;
 
     //handling variables for moving PuzzleCompletePopup
     public static bool isDragging = false;
@@ -34,6 +36,8 @@ public class PuzzleUIHandler : MonoBehaviour
     private Toggle _fullscreenToggle;
     private DropdownField _resolutionDropdown;
     private static Label _filePathText;
+
+    private static Label _errorPopupInfo;
 
     private void Awake()
     {
@@ -48,17 +52,21 @@ public class PuzzleUIHandler : MonoBehaviour
         _exitSettingsButton = _document.rootVisualElement.Q("ExitSettingsMenuButton") as Button;
         _returnToMenuButton = _document.rootVisualElement.Q("ReturnToMenuButton") as Button;
         _puzzleCompleteExitButton = _document.rootVisualElement.Q("PuzzleCompleteExitButton") as Button;
+        _errorPopupExitButton = _document.rootVisualElement.Q("ErrorPopupExitButton") as Button;
 
         //gets ui visual elemetns
         _puzzleCompletePopup = _document.rootVisualElement.Q("PuzzleCompletePopup") as VisualElement;
         _loadingScreen = _document.rootVisualElement.Q("LoadingScreen") as VisualElement;
         _settingsMenu = _document.rootVisualElement.Q("SettingsMenu") as VisualElement;
+        _errorPopup = _document.rootVisualElement.Q("ErrorPopup") as VisualElement;
 
         //get settings menu items
         _filePathText = _document.rootVisualElement.Q("FilePathText") as Label;
         _volumeSlider = _document.rootVisualElement.Q("VolumeSlider") as Slider;
         _fullscreenToggle = _document.rootVisualElement.Q("FullscreenToggle") as Toggle;
         _resolutionDropdown = _document.rootVisualElement.Q("ResolutionDropdown") as DropdownField;
+
+        _errorPopupInfo = _document.rootVisualElement.Q("ErrorPopupInfo") as Label;
 
         //Registers events for clicking each button
         _skipButton.RegisterCallback<ClickEvent>(OnSkipButtonPress);
@@ -68,6 +76,7 @@ public class PuzzleUIHandler : MonoBehaviour
         _exitSettingsButton.RegisterCallback<ClickEvent>(OnExitSettingsMenuButtonPress);
         _returnToMenuButton.RegisterCallback<ClickEvent>(OnReturnToMenuButtonPress);
         _puzzleCompleteExitButton.RegisterCallback<ClickEvent>(OnPuzzleCompleteExitButtonPress);
+        _errorPopupExitButton.RegisterCallback<ClickEvent>(OnErrorPopupExitButtonPress);
 
         //registers events for moving around the popup screen
         _puzzleCompletePopup.RegisterCallback<PointerDownEvent>(OnPointerDown);
@@ -96,6 +105,7 @@ public class PuzzleUIHandler : MonoBehaviour
         _exitSettingsButton.UnregisterCallback<ClickEvent>(OnExitSettingsMenuButtonPress);
         _returnToMenuButton.UnregisterCallback<ClickEvent>(OnReturnToMenuButtonPress);
         _puzzleCompleteExitButton.UnregisterCallback<ClickEvent>(OnPuzzleCompleteExitButtonPress);
+        _errorPopupExitButton.UnregisterCallback<ClickEvent>(OnErrorPopupExitButtonPress);
 
         //dissables popup events when popup is dissabled
         _puzzleCompletePopup.UnregisterCallback<PointerDownEvent>(OnPointerDown);
@@ -281,5 +291,16 @@ public class PuzzleUIHandler : MonoBehaviour
     private void OnPuzzleCompleteExitButtonPress(ClickEvent evt)
     {
         _puzzleCompletePopup.style.display = DisplayStyle.None;
+    }
+
+    public static void OpenErrorPopup(string text)
+    {
+        _errorPopupInfo.text = text;
+        _errorPopup.style.display = DisplayStyle.Flex;
+    }
+
+    private void OnErrorPopupExitButtonPress(ClickEvent evt)
+    {
+        _errorPopup.style.display = DisplayStyle.None;
     }
 }

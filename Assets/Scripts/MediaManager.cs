@@ -17,6 +17,7 @@ public class MediaManager : MonoBehaviour
     public bool gifPlaying = false;
     private float frameDelayTime;
     private int gifFrame;
+    private int videoFailureNumber = 0;
     private List<UniGif.GifTexture> gifTextures;
 
     //variables to handle video playing
@@ -90,7 +91,8 @@ public class MediaManager : MonoBehaviour
         }
         else
         {
-            Debug.LogError("Failed to load image from file.");
+            PuzzleUIHandler.OpenErrorPopup("Failed to load image from file.");
+            PuzzleUIHandler.CloseLoadingScreen();
         }
     }
 
@@ -115,7 +117,7 @@ public class MediaManager : MonoBehaviour
         videoPlayer.playOnAwake = false;
         videoPlayer.isLooping = true;
 
-        videoPlayer.SetDirectAudioVolume(0, GameState.Instance.volume / 100f);
+        videoPlayer.SetDirectAudioVolume(0, GameState.Instance.volume);
 
         videoPlayer.Prepare();
 
@@ -167,6 +169,7 @@ public class MediaManager : MonoBehaviour
     {
         Debug.Log("Video prepared!");
         Debug.Log("Video dimensions: " + player.width + " x " + player.height);
+        videoFailureNumber = 0;
         
         PuzzleManager.CreatePuzzle((int)player.width, (int)player.height);
         PuzzleManager.Instance.puzzleMaterial.mainTexture = player.texture;
@@ -178,6 +181,8 @@ public class MediaManager : MonoBehaviour
     {
         Debug.Log("VideoPlayer error: " + message);
         Debug.Log("The video codec may not be supported.");
+        videoFailureNumber++;
+        PuzzleUIHandler.OpenErrorPopup(videoFailureNumber + " videos Failed to play. The video codec may not be supported. VideoPlayer error: " + message);
 
         if (GameState.Instance.selectedFilePaths.Count > 0)
         {
@@ -188,8 +193,9 @@ public class MediaManager : MonoBehaviour
         }
         else
         {
-            Debug.Log("No more file paths to load. Returning to menu.");
-            SceneManager.LoadScene("MainMenuScene");
+            PuzzleUIHandler.OpenErrorPopup(videoFailureNumber + " videos Failed to play. The video codec may not be supported. VideoPlayer error: " +
+                                            message + " No more file paths to load. Return to the menu to select more.");
+            PuzzleUIHandler.CloseLoadingScreen();
         }
     }
 
@@ -223,8 +229,8 @@ public class MediaManager : MonoBehaviour
         }
         else
         {
-            Debug.Log("No file paths remaining. Returning to Menu");
-            SceneManager.LoadScene("MainMenuScene");
+            PuzzleUIHandler.OpenErrorPopup("No file paths remaining. Return to Menu");
+            PuzzleUIHandler.CloseLoadingScreen();
         }
     }
 
@@ -271,6 +277,8 @@ public class MediaManager : MonoBehaviour
         else
         {
             Debug.LogWarning("GameState instance filepath is null or empty.");
+            PuzzleUIHandler.OpenErrorPopup("GameState instance filepath is null or empty. Try again or select a different file.");
+            PuzzleUIHandler.CloseLoadingScreen();
         }
     }
 }

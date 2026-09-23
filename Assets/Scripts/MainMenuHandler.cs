@@ -26,6 +26,7 @@ public class MainMenuHandler : MonoBehaviour
     private Button _addFolderButton;
     private Button _folderSelectionContinueButton;
     private Button _exitSettingsMenuButton;
+    private static Button _errorPopupExitButton;
 
     //initialize visual elements
     private VisualElement _fileSelectionPopup;
@@ -33,11 +34,14 @@ public class MainMenuHandler : MonoBehaviour
     private VisualElement _difficultySelectionPopup;
     private VisualElement _loadingScreen;
     private VisualElement _settingsMenu;
+    private static VisualElement _errorPopup;
 
     //initialize settings menu items
     private static Slider _volumeSlider;
     private static Toggle _fullscreenToggle;
     private static DropdownField _resolutionDropdown;
+
+    private static Label _errorPopupInfo;
 
     private void Awake()
     {
@@ -58,6 +62,7 @@ public class MainMenuHandler : MonoBehaviour
         _addFolderButton = _document.rootVisualElement.Q("AddFolderButton") as Button;
         _folderSelectionContinueButton = _document.rootVisualElement.Q("FolderSelectionContinueButton") as Button;
         _exitSettingsMenuButton = _document.rootVisualElement.Q("ExitSettingsMenuButton") as Button;
+        _errorPopupExitButton = _document.rootVisualElement.Q("ErrorPopupExitButton") as Button;
 
         //gets ui visual elements (primarily for popup screens)
         _fileSelectionPopup = _document.rootVisualElement.Q("FileSelectionPopup") as VisualElement;
@@ -65,11 +70,14 @@ public class MainMenuHandler : MonoBehaviour
         _loadingScreen = _document.rootVisualElement.Q("LoadingScreen") as VisualElement;
         _folderSelectionPopup = _document.rootVisualElement.Q("FolderSelectionPopup") as VisualElement;
         _settingsMenu = _document.rootVisualElement.Q("SettingsMenu") as VisualElement;
+        _errorPopup = _document.rootVisualElement.Q("ErrorPopup") as VisualElement;
 
         //get settings menu items
         _volumeSlider = _document.rootVisualElement.Q("VolumeSlider") as Slider;
         _fullscreenToggle = _document.rootVisualElement.Q("FullscreenToggle") as Toggle;
         _resolutionDropdown = _document.rootVisualElement.Q("ResolutionDropdown") as DropdownField;
+
+        _errorPopupInfo = _document.rootVisualElement.Q("ErrorPopupInfo") as Label;
 
         //Registers events for clicking each button
         _startButton.RegisterCallback<ClickEvent>(OnStartButtonPress);
@@ -85,6 +93,7 @@ public class MainMenuHandler : MonoBehaviour
         _addFolderButton.RegisterCallback<ClickEvent>(OnAddFolderButtonPress);
         _folderSelectionContinueButton.RegisterCallback<ClickEvent>(OnFolderSelectionContinueButtonPress);
         _exitSettingsMenuButton.RegisterCallback<ClickEvent>(OnExitSettingsMenuButtonPress);
+        _errorPopupExitButton.RegisterCallback<ClickEvent>(OnErrorPopupExitButtonPress);
 
         //Register events for settings menu items
         _volumeSlider.RegisterValueChangedCallback(OnVolumeSliderChanged);
@@ -111,6 +120,7 @@ public class MainMenuHandler : MonoBehaviour
         _addFolderButton.UnregisterCallback<ClickEvent>(OnAddFolderButtonPress);
         _folderSelectionContinueButton.UnregisterCallback<ClickEvent>(OnFolderSelectionContinueButtonPress);
         _exitSettingsMenuButton.UnregisterCallback<ClickEvent>(OnExitSettingsMenuButtonPress);
+        _errorPopupExitButton.UnregisterCallback<ClickEvent>(OnErrorPopupExitButtonPress);
 
         //dissables settings menu items events when they are dissabled
         _volumeSlider.UnregisterValueChangedCallback(OnVolumeSliderChanged);
@@ -252,6 +262,7 @@ public class MainMenuHandler : MonoBehaviour
                     // if it is the same folder
                     if (string.Equals(newFolderPath, existingFolderPath, StringComparison.OrdinalIgnoreCase))
                     {
+                        OpenErrorPopup("Folder already selected: " + newFolderPath);
                         Debug.Log("Folder already selected: " + newFolderPath);
                         return;
                     }
@@ -259,6 +270,7 @@ public class MainMenuHandler : MonoBehaviour
                     // if the new folder is inside an existing folder
                     if (newFolderPath.StartsWith(existingFolderPath + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase))
                     {
+                        OpenErrorPopup("Folder is already covered by an existing folder: " + existingFolderPath);
                         Debug.Log("Folder is already covered by an existing folder: " + existingFolderPath);
                         return;
                     }
@@ -326,5 +338,16 @@ public class MainMenuHandler : MonoBehaviour
                 _resolutionDropdown.choices.Add(option);
             }
         }
+    }
+
+    public static void OpenErrorPopup(string text)
+    {
+        _errorPopupInfo.text = text;
+        _errorPopup.style.display = DisplayStyle.Flex;
+    }
+
+    private void OnErrorPopupExitButtonPress(ClickEvent evt)
+    {
+        _errorPopup.style.display = DisplayStyle.None;
     }
 }
