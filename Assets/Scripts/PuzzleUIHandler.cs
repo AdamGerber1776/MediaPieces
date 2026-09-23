@@ -16,6 +16,7 @@ public class PuzzleUIHandler : MonoBehaviour
     private Button _nextPuzzleButton;
     private Button _exitSettingsButton;
     private Button _returnToMenuButton;
+    private Button _puzzleCompleteExitButton;
 
     //initialize visual elements
     private static VisualElement _puzzleCompletePopup;
@@ -24,6 +25,7 @@ public class PuzzleUIHandler : MonoBehaviour
 
     //handling variables for moving PuzzleCompletePopup
     public static bool isDragging = false;
+    public static bool isPointerOverPopup = false;
     private Vector3 pointerStartPosition;
     private Vector2 popupStartPosition;
 
@@ -45,6 +47,7 @@ public class PuzzleUIHandler : MonoBehaviour
         _nextPuzzleButton = _document.rootVisualElement.Q("NextPuzzleButton") as Button;
         _exitSettingsButton = _document.rootVisualElement.Q("ExitSettingsMenuButton") as Button;
         _returnToMenuButton = _document.rootVisualElement.Q("ReturnToMenuButton") as Button;
+        _puzzleCompleteExitButton = _document.rootVisualElement.Q("PuzzleCompleteExitButton") as Button;
 
         //gets ui visual elemetns
         _puzzleCompletePopup = _document.rootVisualElement.Q("PuzzleCompletePopup") as VisualElement;
@@ -64,11 +67,14 @@ public class PuzzleUIHandler : MonoBehaviour
         _nextPuzzleButton.RegisterCallback<ClickEvent>(OnNextPuzzleButtonPress);
         _exitSettingsButton.RegisterCallback<ClickEvent>(OnExitSettingsMenuButtonPress);
         _returnToMenuButton.RegisterCallback<ClickEvent>(OnReturnToMenuButtonPress);
+        _puzzleCompleteExitButton.RegisterCallback<ClickEvent>(OnPuzzleCompleteExitButtonPress);
 
         //registers events for moving around the popup screen
         _puzzleCompletePopup.RegisterCallback<PointerDownEvent>(OnPointerDown);
         _puzzleCompletePopup.RegisterCallback<PointerMoveEvent>(OnPointerMove);
         _puzzleCompletePopup.RegisterCallback<PointerUpEvent>(OnPointerUp);
+        _puzzleCompletePopup.RegisterCallback<PointerEnterEvent>(OnPopupPointerEnter);
+        _puzzleCompletePopup.RegisterCallback<PointerLeaveEvent>(OnPopupPointerLeave);
 
         //Register events for settings menu items
         _volumeSlider.RegisterValueChangedCallback(OnVolumeSliderChanged);
@@ -89,11 +95,14 @@ public class PuzzleUIHandler : MonoBehaviour
         _nextPuzzleButton.UnregisterCallback<ClickEvent>(OnNextPuzzleButtonPress);
         _exitSettingsButton.UnregisterCallback<ClickEvent>(OnExitSettingsMenuButtonPress);
         _returnToMenuButton.UnregisterCallback<ClickEvent>(OnReturnToMenuButtonPress);
+        _puzzleCompleteExitButton.UnregisterCallback<ClickEvent>(OnPuzzleCompleteExitButtonPress);
 
         //dissables popup events when popup is dissabled
         _puzzleCompletePopup.UnregisterCallback<PointerDownEvent>(OnPointerDown);
         _puzzleCompletePopup.UnregisterCallback<PointerMoveEvent>(OnPointerMove);
         _puzzleCompletePopup.UnregisterCallback<PointerUpEvent>(OnPointerUp);
+        _puzzleCompletePopup.UnregisterCallback<PointerEnterEvent>(OnPopupPointerEnter);
+        _puzzleCompletePopup.UnregisterCallback<PointerLeaveEvent>(OnPopupPointerLeave);
 
         //dissables settings menu items events when they are dissabled
         _volumeSlider.UnregisterValueChangedCallback(OnVolumeSliderChanged);
@@ -193,6 +202,16 @@ public class PuzzleUIHandler : MonoBehaviour
         _puzzleCompletePopup.ReleasePointer(evt.pointerId);
     }
 
+    private void OnPopupPointerEnter(PointerEnterEvent evt)
+    {
+        isPointerOverPopup = true;
+    }
+
+    private void OnPopupPointerLeave(PointerLeaveEvent evt)
+    {
+        isPointerOverPopup = false;
+    }
+
     public static void CloseLoadingScreen()
     {
         _loadingScreen.style.display = DisplayStyle.None;
@@ -257,5 +276,10 @@ public class PuzzleUIHandler : MonoBehaviour
     public static void PopulateFilePath(string path)
     {
         _filePathText.text = path;
+    }
+
+    private void OnPuzzleCompleteExitButtonPress(ClickEvent evt)
+    {
+        _puzzleCompletePopup.style.display = DisplayStyle.None;
     }
 }
