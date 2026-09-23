@@ -38,6 +38,7 @@ public class PuzzleManager : MonoBehaviour
 
         Instance = this;
         difficulty = GameState.Instance.selectedDifficulty;
+        ConfigureHighlightMaterial(highlightMaterial);
     }
 
     public static void CreatePuzzle(int width, int height)
@@ -310,6 +311,22 @@ public class PuzzleManager : MonoBehaviour
         return availablePieces[index];
     }
 
+    private static void ConfigureHighlightMaterial(Material material)
+    {
+        material.SetFloat("_Surface", 1f); // Transparent
+        material.SetFloat("_AlphaClip", 0f); // Disable alpha clipping
+
+        material.SetFloat("_SrcBlend", (float)UnityEngine.Rendering.BlendMode.SrcAlpha);
+        material.SetFloat("_DstBlend", (float)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
+
+        material.SetFloat("_SrcBlendAlpha", (float)UnityEngine.Rendering.BlendMode.One);
+        material.SetFloat("_DstBlendAlpha", (float)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
+
+        material.SetFloat("_ZWrite", 0f);
+
+        material.SetColor("_BaseColor", new Color(1f, 1f, 0f, 0.35f));
+    }
+
     //highlight a piece and its correct board location
     public static void HighlightPiece(PuzzlePiece piece)
     {
@@ -321,10 +338,10 @@ public class PuzzleManager : MonoBehaviour
         // Create highlight object for puzzle piece
         highlightPieceObject = GameObject.CreatePrimitive(PrimitiveType.Quad);
         highlightPieceObject.name = "PuzzlePieceHighlight";
-        highlightPieceObject.transform.localScale = new Vector3(pieceWidth * 1.1f, pieceHeight * 1.1f, 1f);
+        highlightPieceObject.transform.localScale = new Vector3(pieceWidth, pieceHeight, 1f);
 
         highlightPieceObject.transform.SetParent(piece.transform);
-        highlightPieceObject.transform.localPosition = new Vector3(0f, 0f, 0.1f);
+        highlightPieceObject.transform.localPosition = new Vector3(0f, 0f, -0.1f);
 
         Renderer pieceRenderer = highlightPieceObject.GetComponent<Renderer>();
         pieceRenderer.material = Instance.highlightMaterial;
@@ -340,7 +357,7 @@ public class PuzzleManager : MonoBehaviour
             {
                 highlightBoardPieceObject = GameObject.CreatePrimitive(PrimitiveType.Quad);
                 highlightBoardPieceObject.name = "BoardPieceHighlight";
-                highlightBoardPieceObject.transform.localScale = new Vector3(pieceWidth * 0.75f, pieceHeight * 0.75f, 1f);
+                highlightBoardPieceObject.transform.localScale = new Vector3(pieceWidth, pieceHeight, 1f);
 
                 highlightBoardPieceObject.transform.position = 
                 new Vector3(

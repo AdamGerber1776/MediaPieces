@@ -31,7 +31,7 @@ public class PuzzleUIHandler : MonoBehaviour
     private Slider _volumeSlider;
     private Toggle _fullscreenToggle;
     private DropdownField _resolutionDropdown;
-    private Label _filePathText;
+    private static Label _filePathText;
 
     private void Awake()
     {
@@ -52,6 +52,7 @@ public class PuzzleUIHandler : MonoBehaviour
         _settingsMenu = _document.rootVisualElement.Q("SettingsMenu") as VisualElement;
 
         //get settings menu items
+        _filePathText = _document.rootVisualElement.Q("FilePathText") as Label;
         _volumeSlider = _document.rootVisualElement.Q("VolumeSlider") as Slider;
         _fullscreenToggle = _document.rootVisualElement.Q("FullscreenToggle") as Toggle;
         _resolutionDropdown = _document.rootVisualElement.Q("ResolutionDropdown") as DropdownField;
@@ -73,6 +74,10 @@ public class PuzzleUIHandler : MonoBehaviour
         _volumeSlider.RegisterValueChangedCallback(OnVolumeSliderChanged);
         _fullscreenToggle.RegisterValueChangedCallback(OnFullscreenToggleChanged);
         _resolutionDropdown.RegisterValueChangedCallback(OnResolutionDropdownChanged);
+
+        //gives the resolution dropdown the viable resolutions for the users device
+        PopulateResolutionDropdown();
+        UpdateSettings();
     }
 
     private void OnDisable()
@@ -213,16 +218,44 @@ public class PuzzleUIHandler : MonoBehaviour
 
     private void OnVolumeSliderChanged(ChangeEvent<float> evt)
     {
-        GameState.Instance.volume = evt.newValue;
+        GameState.Instance.UpdateVolume(evt.newValue);
     }
 
     private void OnFullscreenToggleChanged(ChangeEvent<bool> evt)
     {
-        GameState.Instance.fullscreen = evt.newValue;
+        GameState.Instance.UpdateFullscreenToggle(evt.newValue);
     }
 
     private void OnResolutionDropdownChanged(ChangeEvent<string> evt)
     {
-        GameState.Instance.resolution = evt.newValue;
+        GameState.Instance.UpdateResolutionDropdown(evt.newValue);
+    }
+
+    private void UpdateSettings()
+    {
+        _volumeSlider.value = GameState.Instance.volume;
+        _fullscreenToggle.value = GameState.Instance.fullscreen;
+        _resolutionDropdown.index = _resolutionDropdown.choices.IndexOf(GameState.Instance.resolution);
+    }
+
+    private void PopulateResolutionDropdown()
+    {
+        _resolutionDropdown.choices.Clear();
+
+        foreach (Resolution resolution in Screen.resolutions)
+        {
+            string option =
+                resolution.width + "x" + resolution.height;
+
+            if (!_resolutionDropdown.choices.Contains(option))
+            {
+                _resolutionDropdown.choices.Add(option);
+            }
+        }
+    }
+
+    public static void PopulateFilePath(string path)
+    {
+        _filePathText.text = path;
     }
 }

@@ -22,7 +22,6 @@ public class MediaManager : MonoBehaviour
     //variables to handle video playing
     public GameObject videoPlayerObject;
     public VideoPlayer videoPlayer;
-    public AudioSource videoPlayerAudio;
 
     public static MediaManager Instance;
 
@@ -115,6 +114,8 @@ public class MediaManager : MonoBehaviour
 
         videoPlayer.playOnAwake = false;
         videoPlayer.isLooping = true;
+
+        videoPlayer.SetDirectAudioVolume(0, GameState.Instance.volume / 100f);
 
         videoPlayer.Prepare();
 
@@ -233,6 +234,7 @@ public class MediaManager : MonoBehaviour
         if (GameState.Instance.selectedFilePath != "" && GameState.Instance.selectedFilePath != null)
         {
             string filePath = GameState.Instance.selectedFilePath;
+            PuzzleUIHandler.PopulateFilePath(filePath);
             Debug.Log("Loaded file path: " + filePath);
             //checks if the file exists at the specified path
             if (System.IO.File.Exists(filePath))

@@ -35,9 +35,9 @@ public class MainMenuHandler : MonoBehaviour
     private VisualElement _settingsMenu;
 
     //initialize settings menu items
-    private Slider _volumeSlider;
-    private Toggle _fullscreenToggle;
-    private DropdownField _resolutionDropdown;
+    private static Slider _volumeSlider;
+    private static Toggle _fullscreenToggle;
+    private static DropdownField _resolutionDropdown;
 
     private void Awake()
     {
@@ -90,6 +90,9 @@ public class MainMenuHandler : MonoBehaviour
         _volumeSlider.RegisterValueChangedCallback(OnVolumeSliderChanged);
         _fullscreenToggle.RegisterValueChangedCallback(OnFullscreenToggleChanged);
         _resolutionDropdown.RegisterValueChangedCallback(OnResolutionDropdownChanged);
+
+        //gives the resolution dropdown the viable resolutions for the users device
+        PopulateResolutionDropdown();
     }
 
     private void OnDisable()
@@ -289,16 +292,39 @@ public class MainMenuHandler : MonoBehaviour
 
     private void OnVolumeSliderChanged(ChangeEvent<float> evt)
     {
-        GameState.Instance.volume = evt.newValue;
+        GameState.Instance.UpdateVolume(evt.newValue);
     }
 
     private void OnFullscreenToggleChanged(ChangeEvent<bool> evt)
     {
-        GameState.Instance.fullscreen = evt.newValue;
+        GameState.Instance.UpdateFullscreenToggle(evt.newValue);
     }
 
     private void OnResolutionDropdownChanged(ChangeEvent<string> evt)
     {
-        GameState.Instance.resolution = evt.newValue;
+        GameState.Instance.UpdateResolutionDropdown(evt.newValue);
+    }
+
+    public static void UpdateSettings()
+    {
+        _volumeSlider.value = GameState.Instance.volume;
+        _fullscreenToggle.value = GameState.Instance.fullscreen;
+        _resolutionDropdown.index = _resolutionDropdown.choices.IndexOf(GameState.Instance.resolution);
+    }
+
+    private void PopulateResolutionDropdown()
+    {
+        _resolutionDropdown.choices.Clear();
+
+        foreach (Resolution resolution in Screen.resolutions)
+        {
+            string option =
+                resolution.width + "x" + resolution.height;
+
+            if (!_resolutionDropdown.choices.Contains(option))
+            {
+                _resolutionDropdown.choices.Add(option);
+            }
+        }
     }
 }

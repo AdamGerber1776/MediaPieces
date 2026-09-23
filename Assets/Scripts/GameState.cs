@@ -10,9 +10,9 @@ public class GameState : MonoBehaviour
     public int selectedDifficulty;
     public List<string> selectedFolderPaths = new List<string>();
     public List<string> selectedFilePaths = new List<string>();
-    public float volume = 100f;
-    public bool fullscreen = true;
-    public string resolution = "1920x1080";
+    public float volume;
+    public bool fullscreen;
+    public string resolution;
     
     private void Awake()
     {
@@ -24,7 +24,66 @@ public class GameState : MonoBehaviour
         }
 
         Instance = this;
+        LoadSettings();
         //keeps the game state object from being destroyed when loading a new scene
         DontDestroyOnLoad(gameObject);
+    }
+
+    private void LoadSettings()
+    {
+        volume = PlayerPrefs.GetFloat("Volume", 1f);
+        fullscreen = PlayerPrefs.GetInt("Fullscreen", 1) == 1;
+        resolution = PlayerPrefs.GetString("Resolution", Screen.currentResolution.width + "x" + Screen.currentResolution.height);
+
+        ApplyResolution();
+        MainMenuHandler.UpdateSettings();
+    }
+
+    public void UpdateVolume(float newVal)
+    {
+        volume = newVal;
+        PlayerPrefs.SetFloat("Volume", newVal);
+        PlayerPrefs.Save();
+    }
+
+    public void UpdateFullscreenToggle(bool newVal)
+    {
+        fullscreen = newVal;
+        PlayerPrefs.SetInt("Fullscreen", newVal ? 1 : 0);
+        PlayerPrefs.Save();
+    }
+
+    public void UpdateResolutionDropdown(string newVal)
+    {
+        resolution = newVal;
+        PlayerPrefs.SetString("Resolution", newVal);
+        PlayerPrefs.Save();
+
+        ApplyResolution();
+    }
+
+    public void ApplyResolution()
+    {
+        string[] dimensions = resolution.Split('x');
+
+        int width = int.Parse(dimensions[0]);
+        int height = int.Parse(dimensions[1]);
+
+        if (fullscreen)
+        {
+            Screen.SetResolution(
+                width,
+                height,
+                FullScreenMode.FullScreenWindow
+            );
+        }
+        else
+        {
+            Screen.SetResolution(
+                width,
+                height,
+                FullScreenMode.Windowed
+            );
+        }
     }
 }
