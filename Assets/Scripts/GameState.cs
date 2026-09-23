@@ -52,6 +52,8 @@ public class GameState : MonoBehaviour
         fullscreen = newVal;
         PlayerPrefs.SetInt("Fullscreen", newVal ? 1 : 0);
         PlayerPrefs.Save();
+
+        ApplyResolution();
     }
 
     public void UpdateResolutionDropdown(string newVal)
