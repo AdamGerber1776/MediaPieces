@@ -14,16 +14,24 @@ public class PuzzleUIHandler : MonoBehaviour
     private Button _hintButton;
     private Button _menuButton;
     private Button _nextPuzzleButton;
+    private Button _exitSettingsButton;
+    private Button _returnToMenuButton;
 
     //initialize visual elements
     private static VisualElement _puzzleCompletePopup;
     private static VisualElement _loadingScreen;
-
+    private static VisualElement _settingsMenu;
 
     //handling variables for moving PuzzleCompletePopup
     public static bool isDragging = false;
     private Vector3 pointerStartPosition;
     private Vector2 popupStartPosition;
+
+    //Initialize settings menu Items
+    private Slider _volumeSlider;
+    private Toggle _fullscreenToggle;
+    private DropdownField _resolutionDropdown;
+    private Label _filePathText;
 
     private void Awake()
     {
@@ -35,21 +43,36 @@ public class PuzzleUIHandler : MonoBehaviour
         _hintButton = _document.rootVisualElement.Q("HintButton") as Button;
         _menuButton = _document.rootVisualElement.Q("MenuButton") as Button;
         _nextPuzzleButton = _document.rootVisualElement.Q("NextPuzzleButton") as Button;
+        _exitSettingsButton = _document.rootVisualElement.Q("ExitSettingsMenuButton") as Button;
+        _returnToMenuButton = _document.rootVisualElement.Q("ReturnToMenuButton") as Button;
 
         //gets ui visual elemetns
         _puzzleCompletePopup = _document.rootVisualElement.Q("PuzzleCompletePopup") as VisualElement;
         _loadingScreen = _document.rootVisualElement.Q("LoadingScreen") as VisualElement;
+        _settingsMenu = _document.rootVisualElement.Q("SettingsMenu") as VisualElement;
+
+        //get settings menu items
+        _volumeSlider = _document.rootVisualElement.Q("VolumeSlider") as Slider;
+        _fullscreenToggle = _document.rootVisualElement.Q("FullscreenToggle") as Toggle;
+        _resolutionDropdown = _document.rootVisualElement.Q("ResolutionDropdown") as DropdownField;
 
         //Registers events for clicking each button
         _skipButton.RegisterCallback<ClickEvent>(OnSkipButtonPress);
         _hintButton.RegisterCallback<ClickEvent>(OnHintButtonPress);
         _menuButton.RegisterCallback<ClickEvent>(OnMenuButtonPress);
         _nextPuzzleButton.RegisterCallback<ClickEvent>(OnNextPuzzleButtonPress);
+        _exitSettingsButton.RegisterCallback<ClickEvent>(OnExitSettingsMenuButtonPress);
+        _returnToMenuButton.RegisterCallback<ClickEvent>(OnReturnToMenuButtonPress);
 
         //registers events for moving around the popup screen
         _puzzleCompletePopup.RegisterCallback<PointerDownEvent>(OnPointerDown);
         _puzzleCompletePopup.RegisterCallback<PointerMoveEvent>(OnPointerMove);
         _puzzleCompletePopup.RegisterCallback<PointerUpEvent>(OnPointerUp);
+
+        //Register events for settings menu items
+        _volumeSlider.RegisterValueChangedCallback(OnVolumeSliderChanged);
+        _fullscreenToggle.RegisterValueChangedCallback(OnFullscreenToggleChanged);
+        _resolutionDropdown.RegisterValueChangedCallback(OnResolutionDropdownChanged);
     }
 
     private void OnDisable()
@@ -59,9 +82,18 @@ public class PuzzleUIHandler : MonoBehaviour
         _hintButton.UnregisterCallback<ClickEvent>(OnHintButtonPress);
         _menuButton.UnregisterCallback<ClickEvent>(OnMenuButtonPress);
         _nextPuzzleButton.UnregisterCallback<ClickEvent>(OnNextPuzzleButtonPress);
+        _exitSettingsButton.UnregisterCallback<ClickEvent>(OnExitSettingsMenuButtonPress);
+        _returnToMenuButton.UnregisterCallback<ClickEvent>(OnReturnToMenuButtonPress);
+
+        //dissables popup events when popup is dissabled
         _puzzleCompletePopup.UnregisterCallback<PointerDownEvent>(OnPointerDown);
         _puzzleCompletePopup.UnregisterCallback<PointerMoveEvent>(OnPointerMove);
         _puzzleCompletePopup.UnregisterCallback<PointerUpEvent>(OnPointerUp);
+
+        //dissables settings menu items events when they are dissabled
+        _volumeSlider.UnregisterValueChangedCallback(OnVolumeSliderChanged);
+        _fullscreenToggle.UnregisterValueChangedCallback(OnFullscreenToggleChanged);
+        _resolutionDropdown.UnregisterValueChangedCallback(OnResolutionDropdownChanged);
     }
 
     //skips the current puzzle and loads the next one
@@ -93,10 +125,7 @@ public class PuzzleUIHandler : MonoBehaviour
     private void OnMenuButtonPress(ClickEvent evt)
     {
         Debug.Log("Menu Button Pressed");
-        GameState.Instance.selectedFilePath = "";
-        GameState.Instance.selectedFolderPaths = new List<string>();
-        GameState.Instance.selectedFilePaths = new List<string>();
-        SceneManager.LoadScene("MainMenuScene");
+        _settingsMenu.style.display = DisplayStyle.Flex;
     }
 
     public static void OnPuzzleCompletion()
@@ -167,5 +196,33 @@ public class PuzzleUIHandler : MonoBehaviour
     public static void OpenLoadingScreen()
     {
         _loadingScreen.style.display = DisplayStyle.Flex;
+    }
+
+    private void OnExitSettingsMenuButtonPress(ClickEvent evt)
+    {
+        _settingsMenu.style.display = DisplayStyle.None;
+    }
+
+    private void OnReturnToMenuButtonPress(ClickEvent evt)
+    {
+        GameState.Instance.selectedFilePath = "";
+        GameState.Instance.selectedFolderPaths = new List<string>();
+        GameState.Instance.selectedFilePaths = new List<string>();
+        SceneManager.LoadScene("MainMenuScene");
+    }
+
+    private void OnVolumeSliderChanged(ChangeEvent<float> evt)
+    {
+        GameState.Instance.volume = evt.newValue;
+    }
+
+    private void OnFullscreenToggleChanged(ChangeEvent<bool> evt)
+    {
+        GameState.Instance.fullscreen = evt.newValue;
+    }
+
+    private void OnResolutionDropdownChanged(ChangeEvent<string> evt)
+    {
+        GameState.Instance.resolution = evt.newValue;
     }
 }

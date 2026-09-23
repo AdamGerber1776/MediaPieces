@@ -22,6 +22,7 @@ public class MediaManager : MonoBehaviour
     //variables to handle video playing
     public GameObject videoPlayerObject;
     public VideoPlayer videoPlayer;
+    public AudioSource videoPlayerAudio;
 
     public static MediaManager Instance;
 

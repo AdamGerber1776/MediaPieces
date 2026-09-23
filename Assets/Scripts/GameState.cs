@@ -10,6 +10,9 @@ public class GameState : MonoBehaviour
     public int selectedDifficulty;
     public List<string> selectedFolderPaths = new List<string>();
     public List<string> selectedFilePaths = new List<string>();
+    public float volume = 100f;
+    public bool fullscreen = true;
+    public string resolution = "1920x1080";
     
     private void Awake()
     {

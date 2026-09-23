@@ -25,12 +25,19 @@ public class MainMenuHandler : MonoBehaviour
     private Button _exitDifficultyPopupButton;
     private Button _addFolderButton;
     private Button _folderSelectionContinueButton;
+    private Button _exitSettingsMenuButton;
 
     //initialize visual elements
     private VisualElement _fileSelectionPopup;
     private VisualElement _folderSelectionPopup;
     private VisualElement _difficultySelectionPopup;
     private VisualElement _loadingScreen;
+    private VisualElement _settingsMenu;
+
+    //initialize settings menu items
+    private Slider _volumeSlider;
+    private Toggle _fullscreenToggle;
+    private DropdownField _resolutionDropdown;
 
     private void Awake()
     {
@@ -50,12 +57,19 @@ public class MainMenuHandler : MonoBehaviour
         _exitDifficultyPopupButton = _document.rootVisualElement.Q("ExitDifficultyPopupButton") as Button;
         _addFolderButton = _document.rootVisualElement.Q("AddFolderButton") as Button;
         _folderSelectionContinueButton = _document.rootVisualElement.Q("FolderSelectionContinueButton") as Button;
+        _exitSettingsMenuButton = _document.rootVisualElement.Q("ExitSettingsMenuButton") as Button;
 
         //gets ui visual elements (primarily for popup screens)
         _fileSelectionPopup = _document.rootVisualElement.Q("FileSelectionPopup") as VisualElement;
         _difficultySelectionPopup = _document.rootVisualElement.Q("DifficultySelectionPopup") as VisualElement;
         _loadingScreen = _document.rootVisualElement.Q("LoadingScreen") as VisualElement;
         _folderSelectionPopup = _document.rootVisualElement.Q("FolderSelectionPopup") as VisualElement;
+        _settingsMenu = _document.rootVisualElement.Q("SettingsMenu") as VisualElement;
+
+        //get settings menu items
+        _volumeSlider = _document.rootVisualElement.Q("VolumeSlider") as Slider;
+        _fullscreenToggle = _document.rootVisualElement.Q("FullscreenToggle") as Toggle;
+        _resolutionDropdown = _document.rootVisualElement.Q("ResolutionDropdown") as DropdownField;
 
         //Registers events for clicking each button
         _startButton.RegisterCallback<ClickEvent>(OnStartButtonPress);
@@ -70,6 +84,12 @@ public class MainMenuHandler : MonoBehaviour
         _exitDifficultyPopupButton.RegisterCallback<ClickEvent>(OnExitDifficultyPopupButtonPress);
         _addFolderButton.RegisterCallback<ClickEvent>(OnAddFolderButtonPress);
         _folderSelectionContinueButton.RegisterCallback<ClickEvent>(OnFolderSelectionContinueButtonPress);
+        _exitSettingsMenuButton.RegisterCallback<ClickEvent>(OnExitSettingsMenuButtonPress);
+
+        //Register events for settings menu items
+        _volumeSlider.RegisterValueChangedCallback(OnVolumeSliderChanged);
+        _fullscreenToggle.RegisterValueChangedCallback(OnFullscreenToggleChanged);
+        _resolutionDropdown.RegisterValueChangedCallback(OnResolutionDropdownChanged);
     }
 
     private void OnDisable()
@@ -87,6 +107,12 @@ public class MainMenuHandler : MonoBehaviour
         _exitDifficultyPopupButton.UnregisterCallback<ClickEvent>(OnExitDifficultyPopupButtonPress);
         _addFolderButton.UnregisterCallback<ClickEvent>(OnAddFolderButtonPress);
         _folderSelectionContinueButton.UnregisterCallback<ClickEvent>(OnFolderSelectionContinueButtonPress);
+        _exitSettingsMenuButton.UnregisterCallback<ClickEvent>(OnExitSettingsMenuButtonPress);
+
+        //dissables settings menu items events when they are dissabled
+        _volumeSlider.UnregisterValueChangedCallback(OnVolumeSliderChanged);
+        _fullscreenToggle.UnregisterValueChangedCallback(OnFullscreenToggleChanged);
+        _resolutionDropdown.UnregisterValueChangedCallback(OnResolutionDropdownChanged);
     }
 
     //pulls up the file selection popup to determine if users want to select a file or a folder
@@ -100,6 +126,7 @@ public class MainMenuHandler : MonoBehaviour
     private void OnOptionsButtonPress(ClickEvent evt)
     {
         Debug.Log("Options Button Pressed");
+        _settingsMenu.style.display = DisplayStyle.Flex;
     }
 
     //exits the game
@@ -253,5 +280,25 @@ public class MainMenuHandler : MonoBehaviour
     private void OnFolderSelectionContinueButtonPress(ClickEvent evt)
     {
         _difficultySelectionPopup.style.display = DisplayStyle.Flex;
+    }
+
+    private void OnExitSettingsMenuButtonPress(ClickEvent evt)
+    {
+        _settingsMenu.style.display = DisplayStyle.None;
+    }
+
+    private void OnVolumeSliderChanged(ChangeEvent<float> evt)
+    {
+        GameState.Instance.volume = evt.newValue;
+    }
+
+    private void OnFullscreenToggleChanged(ChangeEvent<bool> evt)
+    {
+        GameState.Instance.fullscreen = evt.newValue;
+    }
+
+    private void OnResolutionDropdownChanged(ChangeEvent<string> evt)
+    {
+        GameState.Instance.resolution = evt.newValue;
     }
 }

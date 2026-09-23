@@ -12,7 +12,7 @@
 }
 
 .button {
-    max-width: 60%;
+    max-width: 75%;
     align-items: center;
     align-self: center;
     justify-content: flex-start;
@@ -21,8 +21,8 @@
     padding-top: 1.5%;
     padding-bottom: 1.5%;
     margin-bottom: 0;
-    padding-left: 10%;
-    padding-right: 10%;
+    padding-left: 5%;
+    padding-right: 5%;
     border-top-left-radius: 30px;
     border-top-right-radius: 30px;
     border-bottom-left-radius: 30px;
@@ -41,6 +41,7 @@
     transition-duration: 0s;
     transition-timing-function: ease;
     transition-delay: 0s;
+    min-width: 30%;
 }
 
 .button:active {
