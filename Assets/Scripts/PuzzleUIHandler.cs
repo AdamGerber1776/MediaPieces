@@ -135,7 +135,7 @@ public class PuzzleUIHandler : MonoBehaviour
         }
         else
         {
-            OpenErrorPopup("No more file paths to load. Returning to menu.");
+            OpenErrorPopup("No more file paths to load. Return to menu.");
         }
     }
 
