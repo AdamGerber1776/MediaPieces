@@ -37,7 +37,8 @@ public class MainMenuHandler : MonoBehaviour
     private static VisualElement _errorPopup;
 
     //initialize settings menu items
-    private static Slider _volumeSlider;
+    private static Slider _videoVolumeSlider;
+    private static Slider _sfxVolumeSlider;
     private static Toggle _fullscreenToggle;
     private static DropdownField _resolutionDropdown;
 
@@ -73,7 +74,8 @@ public class MainMenuHandler : MonoBehaviour
         _errorPopup = _document.rootVisualElement.Q("ErrorPopup") as VisualElement;
 
         //get settings menu items
-        _volumeSlider = _document.rootVisualElement.Q("VolumeSlider") as Slider;
+        _videoVolumeSlider = _document.rootVisualElement.Q("VideoVolumeSlider") as Slider;
+        _sfxVolumeSlider = _document.rootVisualElement.Q("SfxVolumeSlider") as Slider;
         _fullscreenToggle = _document.rootVisualElement.Q("FullscreenToggle") as Toggle;
         _resolutionDropdown = _document.rootVisualElement.Q("ResolutionDropdown") as DropdownField;
 
@@ -96,7 +98,8 @@ public class MainMenuHandler : MonoBehaviour
         _errorPopupExitButton.RegisterCallback<ClickEvent>(OnErrorPopupExitButtonPress);
 
         //Register events for settings menu items
-        _volumeSlider.RegisterValueChangedCallback(OnVolumeSliderChanged);
+        _videoVolumeSlider.RegisterValueChangedCallback(OnVideoVolumeSliderChanged);
+        _sfxVolumeSlider.RegisterValueChangedCallback(OnSfxVolumeSliderChanged);
         _fullscreenToggle.RegisterValueChangedCallback(OnFullscreenToggleChanged);
         _resolutionDropdown.RegisterValueChangedCallback(OnResolutionDropdownChanged);
 
@@ -124,7 +127,8 @@ public class MainMenuHandler : MonoBehaviour
         _errorPopupExitButton.UnregisterCallback<ClickEvent>(OnErrorPopupExitButtonPress);
 
         //dissables settings menu items events when they are dissabled
-        _volumeSlider.UnregisterValueChangedCallback(OnVolumeSliderChanged);
+        _videoVolumeSlider.UnregisterValueChangedCallback(OnVideoVolumeSliderChanged);
+        _sfxVolumeSlider.UnregisterValueChangedCallback(OnSfxVolumeSliderChanged);
         _fullscreenToggle.UnregisterValueChangedCallback(OnFullscreenToggleChanged);
         _resolutionDropdown.UnregisterValueChangedCallback(OnResolutionDropdownChanged);
     }
@@ -132,6 +136,7 @@ public class MainMenuHandler : MonoBehaviour
     //pulls up the file selection popup to determine if users want to select a file or a folder
     private void OnStartButtonPress(ClickEvent evt)
     {
+        AudioManager.Instance.PlayButtonPress();
         Debug.Log("Start Button Pressed");
         _fileSelectionPopup.style.display = DisplayStyle.Flex;
     }
@@ -139,6 +144,7 @@ public class MainMenuHandler : MonoBehaviour
     //pulls up the settings menu
     private void OnOptionsButtonPress(ClickEvent evt)
     {
+        AudioManager.Instance.PlayButtonPress();
         Debug.Log("Options Button Pressed");
         _settingsMenu.style.display = DisplayStyle.Flex;
     }
@@ -146,6 +152,7 @@ public class MainMenuHandler : MonoBehaviour
     //exits the game
     private void OnExitButtonPress(ClickEvent evt)
     {
+        AudioManager.Instance.PlayButtonPress();
         Debug.Log("Exit Button Pressed");
         Application.Quit();
     }
@@ -153,6 +160,7 @@ public class MainMenuHandler : MonoBehaviour
     //pulls up the windows file browser for a user to select a file
     private void OnSelectFileButtonPress(ClickEvent evt)
     {
+        AudioManager.Instance.PlayButtonPress();
         Debug.Log("Select file Button Pressed");
         SelectFile();
     }
@@ -160,6 +168,7 @@ public class MainMenuHandler : MonoBehaviour
     //pulls up windows file browser for a user to select a folder
     private void OnSelectFolderButtonPress(ClickEvent evt)
     {
+        AudioManager.Instance.PlayButtonPress();
         Debug.Log("Select folder Button Pressed");
         SelectFolder();
         _folderSelectionPopup.style.display = DisplayStyle.Flex;
@@ -168,6 +177,7 @@ public class MainMenuHandler : MonoBehaviour
     //returns to the main menu
     private void OnExitSelectionPopupButtonPress(ClickEvent evt)
     {
+        AudioManager.Instance.PlayButtonPress();
         Debug.Log("Exit selection popup Button Pressed");
         _fileSelectionPopup.style.display = DisplayStyle.None;
     }
@@ -175,6 +185,7 @@ public class MainMenuHandler : MonoBehaviour
     //sets difficulty to easy and loads the puzzle scene
     private void OnEasyButtonPress(ClickEvent evt)
     {
+        AudioManager.Instance.PlayButtonPress();
         Debug.Log("Easy Button Pressed");
         GameState.Instance.selectedDifficulty = 3;
         _loadingScreen.style.display = DisplayStyle.Flex;
@@ -184,6 +195,7 @@ public class MainMenuHandler : MonoBehaviour
     //sets difficulty to normal and loads the puzzle scene
     private void OnNormalButtonPress(ClickEvent evt)
     {
+        AudioManager.Instance.PlayButtonPress();
         Debug.Log("Normal Button Pressed");
         GameState.Instance.selectedDifficulty = 5;
         _loadingScreen.style.display = DisplayStyle.Flex;
@@ -193,6 +205,7 @@ public class MainMenuHandler : MonoBehaviour
     //sets difficulty to hard and loads the puzzle scene
     private void OnHardButtonPress(ClickEvent evt)
     {
+        AudioManager.Instance.PlayButtonPress();
         Debug.Log("Hard Button Pressed");
         GameState.Instance.selectedDifficulty = 7;
         _loadingScreen.style.display = DisplayStyle.Flex;
@@ -202,6 +215,7 @@ public class MainMenuHandler : MonoBehaviour
     //returns to the selection popup menu
     private void OnExitDifficultyPopupButtonPress(ClickEvent evt)
     {
+        AudioManager.Instance.PlayButtonPress();
         Debug.Log("Exit difficulty popup Button Pressed");
         _difficultySelectionPopup.style.display = DisplayStyle.None;
     }
@@ -290,24 +304,31 @@ public class MainMenuHandler : MonoBehaviour
 
     private void OnAddFolderButtonPress(ClickEvent evt)
     {
+        AudioManager.Instance.PlayButtonPress();
         SelectFolder();
     }
 
     private void OnFolderSelectionContinueButtonPress(ClickEvent evt)
     {
+        AudioManager.Instance.PlayButtonPress();
         _difficultySelectionPopup.style.display = DisplayStyle.Flex;
     }
 
     private void OnExitSettingsMenuButtonPress(ClickEvent evt)
     {
+        AudioManager.Instance.PlayButtonPress();
         _settingsMenu.style.display = DisplayStyle.None;
     }
 
-    private void OnVolumeSliderChanged(ChangeEvent<float> evt)
+    private void OnVideoVolumeSliderChanged(ChangeEvent<float> evt)
     {
-        GameState.Instance.UpdateVolume(evt.newValue);
+        GameState.Instance.UpdateVideoVolume(evt.newValue);
     }
 
+    private void OnSfxVolumeSliderChanged(ChangeEvent<float> evt)
+    {
+        GameState.Instance.UpdateSfxVolume(evt.newValue);
+    }
     private void OnFullscreenToggleChanged(ChangeEvent<bool> evt)
     {
         GameState.Instance.UpdateFullscreenToggle(evt.newValue);
@@ -321,7 +342,8 @@ public class MainMenuHandler : MonoBehaviour
     public static void UpdateSettings()
     {
         if (GameState.Instance == null) return;
-        _volumeSlider.value = GameState.Instance.volume;
+        _videoVolumeSlider.value = GameState.Instance.videoVolume;
+        _sfxVolumeSlider.value = GameState.Instance.sfxVolume;
         _fullscreenToggle.value = GameState.Instance.fullscreen;
         _resolutionDropdown.index = _resolutionDropdown.choices.IndexOf(GameState.Instance.resolution);
     }
@@ -350,6 +372,7 @@ public class MainMenuHandler : MonoBehaviour
 
     private void OnErrorPopupExitButtonPress(ClickEvent evt)
     {
+        AudioManager.Instance.PlayButtonPress();
         _errorPopup.style.display = DisplayStyle.None;
     }
 }

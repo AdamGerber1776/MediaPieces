@@ -36,7 +36,6 @@ public class MediaManager : MonoBehaviour
         }
 
         Instance = this;
-        //keeps the game state object from being destroyed when loading a new scene
     }
 
     void Start()
@@ -117,7 +116,7 @@ public class MediaManager : MonoBehaviour
         videoPlayer.playOnAwake = false;
         videoPlayer.isLooping = true;
 
-        videoPlayer.SetDirectAudioVolume(0, GameState.Instance.volume);
+        videoPlayer.SetDirectAudioVolume(0, GameState.Instance.videoVolume);
 
         videoPlayer.Prepare();
 

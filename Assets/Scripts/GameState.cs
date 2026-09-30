@@ -10,7 +10,8 @@ public class GameState : MonoBehaviour
     public int selectedDifficulty;
     public List<string> selectedFolderPaths = new List<string>();
     public List<string> selectedFilePaths = new List<string>();
-    public float volume;
+    public float videoVolume;
+    public float sfxVolume;
     public bool fullscreen;
     public string resolution;
     
@@ -31,7 +32,8 @@ public class GameState : MonoBehaviour
 
     private void LoadSettings()
     {
-        volume = PlayerPrefs.GetFloat("Volume", 1f);
+        videoVolume = PlayerPrefs.GetFloat("Video Volume", 1f);
+        sfxVolume = PlayerPrefs.GetFloat("SFX Volume", 1f);
         fullscreen = PlayerPrefs.GetInt("Fullscreen", 1) == 1;
         resolution = PlayerPrefs.GetString("Resolution", Screen.currentResolution.width + "x" + Screen.currentResolution.height);
 
@@ -39,11 +41,19 @@ public class GameState : MonoBehaviour
         MainMenuHandler.UpdateSettings();
     }
 
-    public void UpdateVolume(float newVal)
+    public void UpdateVideoVolume(float newVal)
     {
-        volume = newVal;
-        MediaManager.Instance.videoPlayer.SetDirectAudioVolume(0, GameState.Instance.volume);
-        PlayerPrefs.SetFloat("Volume", newVal);
+        videoVolume = newVal;
+        if (MediaManager.Instance != null && MediaManager.Instance.videoPlayer != null) MediaManager.Instance.videoPlayer.SetDirectAudioVolume(0, videoVolume);
+        PlayerPrefs.SetFloat("Video Volume", newVal);
+        PlayerPrefs.Save();
+    }
+
+    public void UpdateSfxVolume(float newVal)
+    {
+        sfxVolume = newVal;
+        AudioManager.Instance.audioSource.volume = sfxVolume;
+        PlayerPrefs.SetFloat("SFX Volume", newVal);
         PlayerPrefs.Save();
     }
 

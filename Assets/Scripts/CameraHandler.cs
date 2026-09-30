@@ -105,7 +105,7 @@ public class CameraHandler : MonoBehaviour
 
     private void HandlePieceDragging()
     {
-        if (PuzzleUIHandler.isDragging || PuzzleUIHandler.isPointerOverPopup) return;
+        if (PuzzleUIHandler.isDragging || PuzzleUIHandler.isPointerOverPopup || PuzzleUIHandler.settingsOpen) return;
         if (pieceMovementAction.action.WasPressedThisFrame())
         {
             Vector3 mouseScreenPosition = Mouse.current.position.ReadValue();
@@ -143,6 +143,7 @@ public class CameraHandler : MonoBehaviour
             {
                 if (PuzzleManager.occupiedGridPositions[gridPosition.x, gridPosition.y] == 0)
                 {
+                    AudioManager.Instance.PlayPieceSnap();
                     Vector3 snapPosition = PuzzleManager.GetBoardPosition(gridPosition.x, gridPosition.y);
                     snapPosition.z = 0.5f; // Set z to 0.5 to ensure the piece stays below pieces being moved on board
                     selectedPiece.transform.position = snapPosition;
