@@ -135,8 +135,7 @@ public class PuzzleUIHandler : MonoBehaviour
         }
         else
         {
-            Debug.Log("No more file paths to load. Returning to menu.");
-            SceneManager.LoadScene("MainMenuScene");
+            OpenErrorPopup("No more file paths to load. Return to menu.");
         }
     }
 
@@ -160,6 +159,7 @@ public class PuzzleUIHandler : MonoBehaviour
     private void OnNextPuzzleButtonPress(ClickEvent evt)
     {
         Debug.Log("Next puzzle button pressed");
+        isPointerOverPopup = false;
         if (GameState.Instance.selectedFilePaths.Count > 0)
         {
             OpenLoadingScreen();
@@ -291,6 +291,7 @@ public class PuzzleUIHandler : MonoBehaviour
     private void OnPuzzleCompleteExitButtonPress(ClickEvent evt)
     {
         _puzzleCompletePopup.style.display = DisplayStyle.None;
+        isPointerOverPopup = false;
     }
 
     public static void OpenErrorPopup(string text)

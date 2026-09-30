@@ -102,6 +102,7 @@ public class MainMenuHandler : MonoBehaviour
 
         //gives the resolution dropdown the viable resolutions for the users device
         PopulateResolutionDropdown();
+        UpdateSettings();
     }
 
     private void OnDisable()
@@ -319,6 +320,7 @@ public class MainMenuHandler : MonoBehaviour
 
     public static void UpdateSettings()
     {
+        if (GameState.Instance == null) return;
         _volumeSlider.value = GameState.Instance.volume;
         _fullscreenToggle.value = GameState.Instance.fullscreen;
         _resolutionDropdown.index = _resolutionDropdown.choices.IndexOf(GameState.Instance.resolution);
