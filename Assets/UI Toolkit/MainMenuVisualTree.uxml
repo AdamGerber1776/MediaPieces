@@ -1,6 +1,18 @@
 <ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <Style src="project://database/Assets/UI%20Toolkit/MainMenuStyle.uss?fileID=7433441132597879392&amp;guid=fa49ab7443592304ca66e6be7f641aae&amp;type=3#MainMenuStyle"/>
-    <ui:VisualElement name="Background" style="flex-grow: 1; -unity-background-image-tint-color: rgb(255, 255, 255); background-color: rgb(219, 231, 211);">
+    <ui:VisualElement name="LoadingScreen" picking-mode="Ignore" style="flex-grow: 1; position: absolute; width: 100%; height: 100%; background-color: rgb(219, 231, 211); justify-content: flex-start; align-items: center; display: none;">
+        <ui:Label text="Loading. Please Wait." name="LoadingText" style="font-size: 100px; margin-top: 10%; color: rgb(115, 115, 115);"/>
+    </ui:VisualElement>
+    <ui:VisualElement name="ErrorPopup" style="flex-grow: 1; position: absolute; top: 30%; bottom: auto; left: 35%; right: auto; border-left-color: rgb(82, 82, 82); border-right-color: rgb(82, 82, 82); border-top-color: rgb(82, 82, 82); border-bottom-color: rgb(82, 82, 82); border-top-width: 2px; border-right-width: 2px; border-bottom-width: 2px; border-left-width: 2px; height: 40%; display: none; opacity: 1; width: 30%;">
+        <ui:VisualElement name="TitleSegment" style="flex-grow: 1; height: 5%; background-color: rgb(115, 115, 115); flex-direction: row; justify-content: space-between; align-items: center;">
+            <ui:Label text="Error" name="TitleText" style="-unity-font-style: bold; font-size: 30px; color: rgb(58, 58, 58); margin-left: 5%; margin-top: 0;"/>
+            <ui:Button text="X" name="ErrorPopupExitButton" class="button" style="font-size: 30px; margin-top: 0; margin-left: 0; margin-right: 2%; height: 90%; width: 8%; border-top-left-radius: 15px; border-bottom-left-radius: 15px; border-bottom-right-radius: 15px; border-top-right-radius: 15px; padding-bottom: 0; padding-left: 0; padding-right: 0; padding-top: 0;"/>
+        </ui:VisualElement>
+        <ui:VisualElement name="ErrorPopupInfoSegment" style="flex-grow: 1; background-color: rgb(196, 196, 196); flex-direction: column; justify-content: center; align-items: center; height: 80%;">
+            <ui:Label text="Label" name="ErrorPopupInfo" style="color: rgb(82, 82, 82); font-size: 25px; white-space: normal; -unity-text-align: upper-center;"/>
+        </ui:VisualElement>
+    </ui:VisualElement>
+    <ui:VisualElement name="Background" style="flex-grow: 1; background-color: rgb(219, 231, 211); background-image: url(&quot;project://database/Assets/Images/jigsaw%20green%20lighter%20bigger.png?fileID=2800000&amp;guid=e8d3f463946fe844b9b0ee6602957a9b&amp;type=3#jigsaw green lighter bigger&quot;); -unity-background-scale-mode: stretch-to-fill;">
         <ui:VisualElement name="Title" style="flex-grow: 1; flex-direction: row; justify-content: center; margin-top: 5%; max-height: 175px;">
             <ui:Label text="Media" name="TitleLeft" class="title" style="color: rgb(82, 82, 82); -unity-font-style: bold; -unity-text-align: upper-right;"/>
             <ui:Label text="Pieces" name="TitleRight" class="title" style="color: rgb(115, 115, 115); -unity-text-align: upper-left; max-width: none; max-height: none;"/>
@@ -35,18 +47,6 @@
             <ui:Toggle label="Fullscreen" name="FullscreenToggle" value="true" style="color: rgb(82, 82, 82); -unity-font-style: bold; font-size: 25px; min-width: auto; width: 75%;"/>
             <ui:DropdownField label="Resolution" name="ResolutionDropdown" choices="1280x720,1920x1080,1920x1200,2560x1440,2560x1600,3440x1440,3840x2160" index="1" style="color: rgb(82, 82, 82); font-size: 25px; width: 75%; -unity-font-style: bold; -unity-text-auto-size: none;"/>
             <ui:Button text="Back" name="ExitSettingsMenuButton" class="popupButton"/>
-        </ui:VisualElement>
-    </ui:VisualElement>
-    <ui:VisualElement name="LoadingScreen" picking-mode="Ignore" style="flex-grow: 1; position: absolute; width: 100%; height: 100%; background-color: rgb(219, 231, 211); justify-content: flex-start; align-items: center; display: none;">
-        <ui:Label text="Loading. Please Wait." name="LoadingText" style="font-size: 100px; margin-top: 10%; color: rgb(115, 115, 115);"/>
-    </ui:VisualElement>
-    <ui:VisualElement name="ErrorPopup" style="flex-grow: 1; position: absolute; top: 30%; bottom: auto; left: 35%; right: auto; border-left-color: rgb(82, 82, 82); border-right-color: rgb(82, 82, 82); border-top-color: rgb(82, 82, 82); border-bottom-color: rgb(82, 82, 82); border-top-width: 2px; border-right-width: 2px; border-bottom-width: 2px; border-left-width: 2px; height: 40%; display: none; opacity: 1; width: 30%;">
-        <ui:VisualElement name="TitleSegment" style="flex-grow: 1; height: 5%; background-color: rgb(115, 115, 115); flex-direction: row; justify-content: space-between; align-items: center;">
-            <ui:Label text="Error" name="TitleText" style="-unity-font-style: bold; font-size: 30px; color: rgb(58, 58, 58); margin-left: 5%; margin-top: 0;"/>
-            <ui:Button text="X" name="ErrorPopupExitButton" class="button" style="font-size: 30px; margin-top: 0; margin-left: 0; margin-right: 2%; height: 90%; width: 8%; border-top-left-radius: 15px; border-bottom-left-radius: 15px; border-bottom-right-radius: 15px; border-top-right-radius: 15px; padding-bottom: 0; padding-left: 0; padding-right: 0; padding-top: 0;"/>
-        </ui:VisualElement>
-        <ui:VisualElement name="ErrorPopupInfoSegment" style="flex-grow: 1; background-color: rgb(196, 196, 196); flex-direction: column; justify-content: center; align-items: center; height: 80%;">
-            <ui:Label text="Label" name="ErrorPopupInfo" style="color: rgb(82, 82, 82); font-size: 25px; white-space: normal; -unity-text-align: upper-center;"/>
         </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>

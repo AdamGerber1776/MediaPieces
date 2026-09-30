@@ -11,7 +11,7 @@ public class MediaManager : MonoBehaviour
     //list of valid extensions
     private readonly string[] validImageExtensions = { ".png", ".jpg", ".jpeg" };
     private readonly string[] validAnimatedImageExtensions = { ".gif" };
-    private readonly string[] validVideoExtensions = { ".mp4" };
+    private readonly string[] validVideoExtensions = { ".mp4" , ".asf", ".avi", ".dv", ".m4v", ".mov", ".mpg", ".mpeg", ".ogv", ".vp8", ".webm", ".wmv"};
 
     //variables to handle gif playing
     public bool gifPlaying = false;
@@ -118,10 +118,10 @@ public class MediaManager : MonoBehaviour
 
         videoPlayer.SetDirectAudioVolume(0, GameState.Instance.videoVolume);
 
-        videoPlayer.Prepare();
-
         videoPlayer.prepareCompleted += OnVideoPrepared;
         videoPlayer.errorReceived += OnVideoError;
+
+        videoPlayer.Prepare();
     }
 
     // to load gifs into a list of frames
