@@ -267,11 +267,15 @@ public class MediaManager : MonoBehaviour
                 else
                 {
                     Debug.LogWarning("File does not have a valid extension: " + fileExtension);
+                    PuzzleUIHandler.OpenErrorPopup("File does not have a valid extension: " + fileExtension);
+                    PuzzleUIHandler.CloseLoadingScreen();
                 }
             }
             else
             {
                 Debug.LogWarning("File does not exist at path: " + filePath);
+                PuzzleUIHandler.OpenErrorPopup("File does not exist at path: " + filePath);
+                PuzzleUIHandler.CloseLoadingScreen();
             }
         }
         else

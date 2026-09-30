@@ -31,3 +31,34 @@
 .button:active {
     background-color: rgb(82, 82, 82);
 }
+
+.skip_button {
+    background-image: url("project://database/Assets/Icons/fast-forward-fill.png?fileID=2800000&guid=c24b6cc101f0bf14da07a2aecb25ffca&type=3#fast-forward-fill");
+    background-color: rgba(0, 0, 0, 0);
+    -unity-background-image-tint-color: rgb(255, 255, 255);
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+.skip_button:active {
+    background-image: url("project://database/Assets/Icons/fast-forward.png?fileID=2800000&guid=bf9e881be94fbb14683f92a3ec0d0130&type=3#fast-forward");
+}
+
+.hint_button {
+    background-image: url("project://database/Assets/Icons/lightbulb-fill.png?fileID=2800000&guid=0ee6fd904f5d60c41823da313387b761&type=3#lightbulb-fill");
+    background-color: rgba(0, 0, 0, 0);
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+.hint_button:active {
+    background-image: url("project://database/Assets/Icons/lightbulb.png?fileID=2800000&guid=637c418d9c885994ab112153b52b998e&type=3#lightbulb");
+}
+
+.menu_button {
+    background-image: url("project://database/Assets/Icons/list.png?fileID=2800000&guid=791b8a45824c6ca4d92cf7d19393841a&type=3#list");
+    background-color: rgba(0, 0, 0, 0);
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+.menu_button:active {
+    background-color: rgb(82, 82, 82);
+}
