@@ -39,6 +39,7 @@ public class MainMenuHandler : MonoBehaviour
     //initialize settings menu items
     private static Slider _videoVolumeSlider;
     private static Slider _sfxVolumeSlider;
+    private static Slider _bgmVolumeSlider;
     private static Toggle _fullscreenToggle;
     private static DropdownField _resolutionDropdown;
 
@@ -76,6 +77,7 @@ public class MainMenuHandler : MonoBehaviour
         //get settings menu items
         _videoVolumeSlider = _document.rootVisualElement.Q("VideoVolumeSlider") as Slider;
         _sfxVolumeSlider = _document.rootVisualElement.Q("SfxVolumeSlider") as Slider;
+        _bgmVolumeSlider = _document.rootVisualElement.Q("BgmVolumeSlider") as Slider;
         _fullscreenToggle = _document.rootVisualElement.Q("FullscreenToggle") as Toggle;
         _resolutionDropdown = _document.rootVisualElement.Q("ResolutionDropdown") as DropdownField;
 
@@ -100,6 +102,7 @@ public class MainMenuHandler : MonoBehaviour
         //Register events for settings menu items
         _videoVolumeSlider.RegisterValueChangedCallback(OnVideoVolumeSliderChanged);
         _sfxVolumeSlider.RegisterValueChangedCallback(OnSfxVolumeSliderChanged);
+        _bgmVolumeSlider.RegisterValueChangedCallback(OnBgmVolumeSliderChanged);
         _fullscreenToggle.RegisterValueChangedCallback(OnFullscreenToggleChanged);
         _resolutionDropdown.RegisterValueChangedCallback(OnResolutionDropdownChanged);
 
@@ -129,6 +132,7 @@ public class MainMenuHandler : MonoBehaviour
         //dissables settings menu items events when they are dissabled
         _videoVolumeSlider.UnregisterValueChangedCallback(OnVideoVolumeSliderChanged);
         _sfxVolumeSlider.UnregisterValueChangedCallback(OnSfxVolumeSliderChanged);
+        _bgmVolumeSlider.UnregisterValueChangedCallback(OnBgmVolumeSliderChanged);
         _fullscreenToggle.UnregisterValueChangedCallback(OnFullscreenToggleChanged);
         _resolutionDropdown.UnregisterValueChangedCallback(OnResolutionDropdownChanged);
     }
@@ -329,6 +333,12 @@ public class MainMenuHandler : MonoBehaviour
     {
         GameState.Instance.UpdateSfxVolume(evt.newValue);
     }
+    
+    private void OnBgmVolumeSliderChanged(ChangeEvent<float> evt)
+    {
+        GameState.Instance.UpdateBgmVolume(evt.newValue);
+    }
+
     private void OnFullscreenToggleChanged(ChangeEvent<bool> evt)
     {
         GameState.Instance.UpdateFullscreenToggle(evt.newValue);
@@ -344,6 +354,7 @@ public class MainMenuHandler : MonoBehaviour
         if (GameState.Instance == null) return;
         _videoVolumeSlider.value = GameState.Instance.videoVolume;
         _sfxVolumeSlider.value = GameState.Instance.sfxVolume;
+        _bgmVolumeSlider.value = GameState.Instance.bgmVolume;
         _fullscreenToggle.value = GameState.Instance.fullscreen;
         _resolutionDropdown.index = _resolutionDropdown.choices.IndexOf(GameState.Instance.resolution);
     }
@@ -366,6 +377,7 @@ public class MainMenuHandler : MonoBehaviour
 
     public static void OpenErrorPopup(string text)
     {
+        AudioManager.Instance.PlayError();
         _errorPopupInfo.text = text;
         _errorPopup.style.display = DisplayStyle.Flex;
     }

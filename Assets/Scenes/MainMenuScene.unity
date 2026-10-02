@@ -405,8 +405,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad6b92e4683280745a51ee03a67667a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AudioManager
-  pieceSnapSound: {fileID: 8300000, guid: 1d4c79ccbe1397043ba474d3c0ee654f, type: 3}
-  buttonSound: {fileID: 8300000, guid: 32317463918d7aa44b8091534bae6ec2, type: 3}
+  pieceSnapSound: {fileID: 8300000, guid: 322d0cd4f79e2db41b581b28aae9f8e7, type: 3}
+  buttonSound: {fileID: 8300000, guid: 632c7fe43aee3f74c9db9f4e7a543e77, type: 3}
   audioSource: {fileID: 0}
 --- !u!82 &755668300
 AudioSource:
@@ -621,7 +621,8 @@ MonoBehaviour:
   selectedDifficulty: 0
   selectedFolderPaths: []
   selectedFilePaths: []
-  volume: 0
+  videoVolume: 0
+  sfxVolume: 0
   fullscreen: 0
   resolution: 
 --- !u!1660057539 &9223372036854775807

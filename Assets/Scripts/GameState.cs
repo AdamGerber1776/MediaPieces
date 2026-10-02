@@ -12,6 +12,7 @@ public class GameState : MonoBehaviour
     public List<string> selectedFilePaths = new List<string>();
     public float videoVolume;
     public float sfxVolume;
+    public float bgmVolume;
     public bool fullscreen;
     public string resolution;
     
@@ -34,6 +35,7 @@ public class GameState : MonoBehaviour
     {
         videoVolume = PlayerPrefs.GetFloat("Video Volume", 1f);
         sfxVolume = PlayerPrefs.GetFloat("SFX Volume", 1f);
+        bgmVolume = PlayerPrefs.GetFloat("BGM Volume", 1f);
         fullscreen = PlayerPrefs.GetInt("Fullscreen", 1) == 1;
         resolution = PlayerPrefs.GetString("Resolution", Screen.currentResolution.width + "x" + Screen.currentResolution.height);
 
@@ -52,8 +54,16 @@ public class GameState : MonoBehaviour
     public void UpdateSfxVolume(float newVal)
     {
         sfxVolume = newVal;
-        AudioManager.Instance.audioSource.volume = sfxVolume;
+        AudioManager.Instance.sfxSource.volume = sfxVolume;
         PlayerPrefs.SetFloat("SFX Volume", newVal);
+        PlayerPrefs.Save();
+    }
+
+    public void UpdateBgmVolume(float newVal)
+    {
+        bgmVolume = newVal;
+        BGMManager.Instance.bgmSource.volume = bgmVolume;
+        PlayerPrefs.SetFloat("BGM Volume", newVal);
         PlayerPrefs.Save();
     }
 
@@ -99,4 +109,5 @@ public class GameState : MonoBehaviour
             );
         }
     }
+
 }

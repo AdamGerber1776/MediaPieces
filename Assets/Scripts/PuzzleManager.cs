@@ -289,6 +289,7 @@ public class PuzzleManager : MonoBehaviour
         Debug.Log("Puzzle Completed!");
         ClearHighlight();
         PuzzleUIHandler.OnPuzzleCompletion();
+        AudioManager.Instance.PlayCompletePuzzle();
     }
 
     public static PuzzlePiece GetHelpPiece()
@@ -407,6 +408,7 @@ public class PuzzleManager : MonoBehaviour
         {
             Destroy(MediaManager.Instance.videoPlayerObject);
             MediaManager.Instance.videoPlayer = null;
+            MediaManager.Instance.videoPlaying = false;
         }
 
         MediaManager.Instance.gifPlaying = false;

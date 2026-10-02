@@ -6,8 +6,12 @@ public class AudioManager : MonoBehaviour
 
     [SerializeField] private AudioClip pieceSnapSound;
     [SerializeField] private AudioClip buttonSound;
+    [SerializeField] private AudioClip completePuzzleSound;
+    [SerializeField] private AudioClip hintSound;
+    [SerializeField] private AudioClip errorSound;
+    [SerializeField] private AudioClip skipSound;
 
-    public AudioSource audioSource;
+    [SerializeField] public AudioSource sfxSource;
 
     private void Awake()
     {
@@ -21,17 +25,35 @@ public class AudioManager : MonoBehaviour
         Instance = this;
         //keeps the game state object from being destroyed when loading a new scene
         DontDestroyOnLoad(gameObject);
-
-        audioSource = GetComponent<AudioSource>();
     }
 
     public void PlayPieceSnap()
     {
-        audioSource.PlayOneShot(pieceSnapSound, GameState.Instance.sfxVolume);
+        sfxSource.PlayOneShot(pieceSnapSound, GameState.Instance.sfxVolume);
     }
 
     public void PlayButtonPress()
     {
-        audioSource.PlayOneShot(buttonSound, GameState.Instance.sfxVolume);
+        sfxSource.PlayOneShot(buttonSound, GameState.Instance.sfxVolume);
+    }
+
+    public void PlayCompletePuzzle()
+    {
+        sfxSource.PlayOneShot(completePuzzleSound, GameState.Instance.sfxVolume);
+    }
+
+    public void PlayHint()
+    {
+        sfxSource.PlayOneShot(hintSound, GameState.Instance.sfxVolume);
+    }
+
+    public void PlayError()
+    {
+        sfxSource.PlayOneShot(errorSound, GameState.Instance.sfxVolume);
+    }
+
+    public void PlaySkip()
+    {
+        sfxSource.PlayOneShot(skipSound, GameState.Instance.sfxVolume);
     }
 }

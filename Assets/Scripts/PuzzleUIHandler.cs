@@ -35,6 +35,7 @@ public class PuzzleUIHandler : MonoBehaviour
     //Initialize settings menu Items
     private Slider _videoVolumeSlider;
     private Slider _sfxVolumeSlider;
+    private Slider _bgmVolumeSlider;
     private Toggle _fullscreenToggle;
     private DropdownField _resolutionDropdown;
     private static Label _filePathText;
@@ -66,6 +67,7 @@ public class PuzzleUIHandler : MonoBehaviour
         _filePathText = _document.rootVisualElement.Q("FilePathText") as Label;
         _videoVolumeSlider = _document.rootVisualElement.Q("VideoVolumeSlider") as Slider;
         _sfxVolumeSlider = _document.rootVisualElement.Q("SfxVolumeSlider") as Slider;
+        _bgmVolumeSlider = _document.rootVisualElement.Q("BgmVolumeSlider") as Slider;
         _fullscreenToggle = _document.rootVisualElement.Q("FullscreenToggle") as Toggle;
         _resolutionDropdown = _document.rootVisualElement.Q("ResolutionDropdown") as DropdownField;
 
@@ -90,7 +92,8 @@ public class PuzzleUIHandler : MonoBehaviour
 
         //Register events for settings menu items
         _videoVolumeSlider.RegisterValueChangedCallback(OnVideoVolumeSliderChanged);
-        _sfxVolumeSlider.RegisterValueChangedCallback(OnsfxVolumeSliderChanged);
+        _sfxVolumeSlider.RegisterValueChangedCallback(OnSfxVolumeSliderChanged);
+        _bgmVolumeSlider.RegisterValueChangedCallback(OnBgmVolumeSliderChanged);
         _fullscreenToggle.RegisterValueChangedCallback(OnFullscreenToggleChanged);
         _resolutionDropdown.RegisterValueChangedCallback(OnResolutionDropdownChanged);
 
@@ -120,7 +123,8 @@ public class PuzzleUIHandler : MonoBehaviour
 
         //dissables settings menu items events when they are dissabled
         _videoVolumeSlider.UnregisterValueChangedCallback(OnVideoVolumeSliderChanged);
-        _sfxVolumeSlider.UnregisterValueChangedCallback(OnsfxVolumeSliderChanged);
+        _sfxVolumeSlider.UnregisterValueChangedCallback(OnSfxVolumeSliderChanged);
+        _bgmVolumeSlider.UnregisterValueChangedCallback(OnBgmVolumeSliderChanged);
         _fullscreenToggle.UnregisterValueChangedCallback(OnFullscreenToggleChanged);
         _resolutionDropdown.UnregisterValueChangedCallback(OnResolutionDropdownChanged);
     }
@@ -130,6 +134,7 @@ public class PuzzleUIHandler : MonoBehaviour
     private void OnSkipButtonPress(ClickEvent evt)
     {
         AudioManager.Instance.PlayButtonPress();
+        AudioManager.Instance.PlaySkip();
         Debug.Log("Skip Button Pressed");
         if (GameState.Instance.selectedFilePaths.Count > 0)
         {
@@ -148,6 +153,7 @@ public class PuzzleUIHandler : MonoBehaviour
     private void OnHintButtonPress(ClickEvent evt)
     {
         AudioManager.Instance.PlayButtonPress();
+        AudioManager.Instance.PlayHint();
         Debug.Log("Hint Button Pressed");
         PuzzleManager.HighlightPiece(PuzzleManager.GetHelpPiece());
     }
@@ -253,6 +259,8 @@ public class PuzzleUIHandler : MonoBehaviour
     {
         AudioManager.Instance.PlayButtonPress();
         settingsOpen = false;
+        MediaManager.Instance.videoPlaying = false;
+        MediaManager.Instance.gifPlaying = false;
         GameState.Instance.selectedFilePath = "";
         GameState.Instance.selectedFolderPaths = new List<string>();
         GameState.Instance.selectedFilePaths = new List<string>();
@@ -264,9 +272,14 @@ public class PuzzleUIHandler : MonoBehaviour
         GameState.Instance.UpdateVideoVolume(evt.newValue);
     }
 
-    private void OnsfxVolumeSliderChanged(ChangeEvent<float> evt)
+    private void OnSfxVolumeSliderChanged(ChangeEvent<float> evt)
     {
         GameState.Instance.UpdateSfxVolume(evt.newValue);
+    }
+
+    private void OnBgmVolumeSliderChanged(ChangeEvent<float> evt)
+    {
+        GameState.Instance.UpdateBgmVolume(evt.newValue);
     }
     private void OnFullscreenToggleChanged(ChangeEvent<bool> evt)
     {
@@ -282,6 +295,7 @@ public class PuzzleUIHandler : MonoBehaviour
     {
         _videoVolumeSlider.value = GameState.Instance.videoVolume;
         _sfxVolumeSlider.value = GameState.Instance.sfxVolume;
+        _bgmVolumeSlider.value = GameState.Instance.bgmVolume;
         _fullscreenToggle.value = GameState.Instance.fullscreen;
         _resolutionDropdown.index = _resolutionDropdown.choices.IndexOf(GameState.Instance.resolution);
     }
@@ -316,6 +330,7 @@ public class PuzzleUIHandler : MonoBehaviour
 
     public static void OpenErrorPopup(string text)
     {
+        AudioManager.Instance.PlayError();
         _errorPopupInfo.text = text;
         _errorPopup.style.display = DisplayStyle.Flex;
     }

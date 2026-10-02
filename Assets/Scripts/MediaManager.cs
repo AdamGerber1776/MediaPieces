@@ -18,6 +18,7 @@ public class MediaManager : MonoBehaviour
     private float frameDelayTime;
     private int gifFrame;
     private int videoFailureNumber = 0;
+    public bool videoPlaying = false;
     private List<UniGif.GifTexture> gifTextures;
 
     //variables to handle video playing
@@ -173,6 +174,7 @@ public class MediaManager : MonoBehaviour
         PuzzleManager.CreatePuzzle((int)player.width, (int)player.height);
         PuzzleManager.Instance.puzzleMaterial.mainTexture = player.texture;
         PuzzleUIHandler.CloseLoadingScreen();
+        videoPlaying = true;
         player.Play();
     }
 
