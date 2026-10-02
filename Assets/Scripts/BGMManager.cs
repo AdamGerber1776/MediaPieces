@@ -35,11 +35,14 @@ public class BGMManager : MonoBehaviour
     }
     private void Update()
     {
-        if (MediaManager.Instance != null && MediaManager.Instance.videoPlaying && bgmSource.isPlaying) 
+        if (MediaManager.Instance != null && MediaManager.Instance.videoPlaying) 
         {
-            Debug.Log("Video is playing, stopping BGM.");
-            loopsRemaining = 0;
-            bgmSource.Stop();
+            if (bgmSource.isPlaying) 
+            {
+                Debug.Log("Video is playing, stopping BGM.");
+                loopsRemaining = 0;
+                bgmSource.Stop();
+            }
             return;
         }
 
