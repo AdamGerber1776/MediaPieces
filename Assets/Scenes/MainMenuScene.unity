@@ -407,7 +407,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AudioManager
   pieceSnapSound: {fileID: 8300000, guid: 322d0cd4f79e2db41b581b28aae9f8e7, type: 3}
   buttonSound: {fileID: 8300000, guid: 632c7fe43aee3f74c9db9f4e7a543e77, type: 3}
-  audioSource: {fileID: 0}
+  completePuzzleSound: {fileID: 8300000, guid: 4a43bc14ff97b1942a7ddc2b8d1616b4, type: 3}
+  hintSound: {fileID: 8300000, guid: af769f3aec7b2824b8b556b4b84c0472, type: 3}
+  errorSound: {fileID: 8300000, guid: d61f0b7a7f84aff448d7b5596eb55f36, type: 3}
+  skipSound: {fileID: 8300000, guid: f86443b8651a60b43b513a0f0ca2f274, type: 3}
+  sfxSource: {fileID: 755668300}
 --- !u!82 &755668300
 AudioSource:
   m_ObjectHideFlags: 0
@@ -623,8 +627,162 @@ MonoBehaviour:
   selectedFilePaths: []
   videoVolume: 0
   sfxVolume: 0
+  bgmVolume: 0
   fullscreen: 0
   resolution: 
+--- !u!1 &1860517093
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1860517095}
+  - component: {fileID: 1860517094}
+  - component: {fileID: 1860517096}
+  m_Layer: 0
+  m_Name: BGMManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!82 &1860517094
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1860517093}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!4 &1860517095
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1860517093}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1860517096
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1860517093}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e576259b62c5f748b734a4a5446c62d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BGMManager
+  offroadAvenue: {fileID: 8300000, guid: d10aba1682d46824ba9f1cc02bd9fda0, type: 3}
+  chillLofiKeepinThePace: {fileID: 8300000, guid: 9a758c39ffc5d0c40959944b9872e38d, type: 3}
+  lofiLostStars: {fileID: 8300000, guid: a735d4effe2bf28448bc04987122a52e, type: 3}
+  lofiMorningBreeze: {fileID: 8300000, guid: 028567c187ad1e04bbd3fbf59ac92d51, type: 3}
+  coolGuitarBackgroundMusicThing: {fileID: 8300000, guid: 59b84e6151be87d409aa4fd81f972415, type: 3}
+  vanillaLofiBeat: {fileID: 8300000, guid: fc8975c5e1ae1234795fb6b4f94ebdbc, type: 3}
+  easyGoingMusicLoop: {fileID: 8300000, guid: 5c852844311a3df46bf40c28eefb108e, type: 3}
+  lofiBeatLoopSchmoop: {fileID: 8300000, guid: c1d7cc3062123c54c82a6065488dafd4, type: 3}
+  moodyBeat: {fileID: 8300000, guid: 77063e75194ad2e4ea5a0bcea20d8b5e, type: 3}
+  chillLofiPianoMusic: {fileID: 8300000, guid: 149332f2843de7f4a89609ecf81007c2, type: 3}
+  bgmSource: {fileID: 1860517094}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -633,4 +791,5 @@ SceneRoots:
   - {fileID: 619394802}
   - {fileID: 1179473045}
   - {fileID: 755668298}
+  - {fileID: 1860517095}
   - {fileID: 1553961808}
