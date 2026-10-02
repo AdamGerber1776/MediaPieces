@@ -23,6 +23,7 @@ public class AudioManager : MonoBehaviour
         }
 
         Instance = this;
+        if (GameState.Instance != null) sfxSource.volume = GameState.Instance.sfxVolume;
         //keeps the game state object from being destroyed when loading a new scene
         DontDestroyOnLoad(gameObject);
     }

@@ -40,6 +40,7 @@ public class GameState : MonoBehaviour
         resolution = PlayerPrefs.GetString("Resolution", Screen.currentResolution.width + "x" + Screen.currentResolution.height);
 
         ApplyResolution();
+        ApplyAudioSettings();
         MainMenuHandler.UpdateSettings();
     }
 
@@ -54,7 +55,7 @@ public class GameState : MonoBehaviour
     public void UpdateSfxVolume(float newVal)
     {
         sfxVolume = newVal;
-        AudioManager.Instance.sfxSource.volume = sfxVolume;
+        if (AudioManager.Instance != null) AudioManager.Instance.sfxSource.volume = sfxVolume;
         PlayerPrefs.SetFloat("SFX Volume", newVal);
         PlayerPrefs.Save();
     }
@@ -62,7 +63,7 @@ public class GameState : MonoBehaviour
     public void UpdateBgmVolume(float newVal)
     {
         bgmVolume = newVal;
-        BGMManager.Instance.bgmSource.volume = bgmVolume;
+        if (BGMManager.Instance != null) BGMManager.Instance.bgmSource.volume = bgmVolume;
         PlayerPrefs.SetFloat("BGM Volume", newVal);
         PlayerPrefs.Save();
     }
@@ -110,4 +111,9 @@ public class GameState : MonoBehaviour
         }
     }
 
+    public void ApplyAudioSettings()
+    {
+        if (AudioManager.Instance != null) AudioManager.Instance.sfxSource.volume = sfxVolume;
+        if (BGMManager.Instance != null) BGMManager.Instance.bgmSource.volume = bgmVolume;
+    }
 }

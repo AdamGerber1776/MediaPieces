@@ -29,14 +29,15 @@ public class BGMManager : MonoBehaviour
         }
 
         Instance = this;
+        if (GameState.Instance != null) bgmSource.volume = GameState.Instance.bgmVolume;
         //keeps the game state object from being destroyed when loading a new scene
         DontDestroyOnLoad(gameObject);
     }
-
     private void Update()
     {
-        if (MediaManager.Instance != null && MediaManager.Instance.videoPlaying) 
+        if (MediaManager.Instance != null && MediaManager.Instance.videoPlaying && bgmSource.isPlaying) 
         {
+            Debug.Log("Video is playing, stopping BGM.");
             loopsRemaining = 0;
             bgmSource.Stop();
             return;
