@@ -772,16 +772,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e576259b62c5f748b734a4a5446c62d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BGMManager
-  offroadAvenue: {fileID: 8300000, guid: d10aba1682d46824ba9f1cc02bd9fda0, type: 3}
-  chillLofiKeepinThePace: {fileID: 8300000, guid: 9a758c39ffc5d0c40959944b9872e38d, type: 3}
-  lofiLostStars: {fileID: 8300000, guid: a735d4effe2bf28448bc04987122a52e, type: 3}
-  lofiMorningBreeze: {fileID: 8300000, guid: 028567c187ad1e04bbd3fbf59ac92d51, type: 3}
-  coolGuitarBackgroundMusicThing: {fileID: 8300000, guid: 59b84e6151be87d409aa4fd81f972415, type: 3}
-  vanillaLofiBeat: {fileID: 8300000, guid: fc8975c5e1ae1234795fb6b4f94ebdbc, type: 3}
-  easyGoingMusicLoop: {fileID: 8300000, guid: 5c852844311a3df46bf40c28eefb108e, type: 3}
-  lofiBeatLoopSchmoop: {fileID: 8300000, guid: c1d7cc3062123c54c82a6065488dafd4, type: 3}
-  moodyBeat: {fileID: 8300000, guid: 77063e75194ad2e4ea5a0bcea20d8b5e, type: 3}
-  chillLofiPianoMusic: {fileID: 8300000, guid: 149332f2843de7f4a89609ecf81007c2, type: 3}
+  offroadAvenue: {fileID: 8300000, guid: 8332c378942365c4db3968c2cf534c5a, type: 3}
+  chillLofiKeepinThePace: {fileID: 8300000, guid: 5150aa99fb5f1bb428bed5628b034870, type: 3}
+  lofiLostStars: {fileID: 8300000, guid: 3325b037dde02784eb91d3cb9620d621, type: 3}
+  lofiMorningBreeze: {fileID: 8300000, guid: 6f97fba69e8199846ae5a77713bec40e, type: 3}
+  coolGuitarBackgroundMusicThing: {fileID: 8300000, guid: f0e9b3f6f858dc144850f1858148ff5b, type: 3}
+  vanillaLofiBeat: {fileID: 8300000, guid: e21bd870d7d3def4b8efecc08cdbaa93, type: 3}
+  easyGoingMusicLoop: {fileID: 8300000, guid: 7d7a69776273ded4d83227f68e08f9fd, type: 3}
+  lofiBeatLoopSchmoop: {fileID: 8300000, guid: 1afcefe37c95ad14485db0077c7d2baf, type: 3}
+  moodyBeat: {fileID: 8300000, guid: ab24255dc295178418f915e6ed665a4f, type: 3}
+  chillLofiPianoMusic: {fileID: 8300000, guid: dac3ce499e8deee4b98cb9741424bb02, type: 3}
   bgmSource: {fileID: 1860517094}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
