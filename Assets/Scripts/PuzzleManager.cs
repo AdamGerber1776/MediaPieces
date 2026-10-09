@@ -73,6 +73,7 @@ public class PuzzleManager : MonoBehaviour
         float boardRight  =  boardWidth / 2f;
         float piecesPadding = 1f; //padding to prevent pieces from being placed too close to the board edges
         float piecesSpace = pieceWidth * 2f; //size of the space in which the pieces can be placed on either side of the board
+        float pieceZ = 0;
 
         //creates the puzzle pieces and places them around the board
         for (int x = 0; x < columns; x++)
@@ -126,7 +127,7 @@ public class PuzzleManager : MonoBehaviour
                             UnityEngine.Random.Range(
                                 -boardHeight / 2f,
                                  boardHeight / 2f),
-                            0
+                            pieceZ
                         );
                         break;
                     case 1: //right side
@@ -137,10 +138,11 @@ public class PuzzleManager : MonoBehaviour
                             UnityEngine.Random.Range(
                                 -boardHeight / 2f,
                                 boardHeight / 2f),
-                            0
+                            pieceZ
                         );
                         break;
                 }
+                pieceZ -= 0.0001f;
                 piece.AddComponent<BoxCollider2D>();
             }
         }

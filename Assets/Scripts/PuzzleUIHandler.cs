@@ -90,6 +90,14 @@ public class PuzzleUIHandler : MonoBehaviour
         _puzzleCompletePopup.RegisterCallback<PointerEnterEvent>(OnPopupPointerEnter);
         _puzzleCompletePopup.RegisterCallback<PointerLeaveEvent>(OnPopupPointerLeave);
 
+        //Registers when pointer is over menu buttons
+        _skipButton.RegisterCallback<PointerEnterEvent>(OnPopupPointerEnter);
+        _skipButton.RegisterCallback<PointerLeaveEvent>(OnPopupPointerLeave);
+        _hintButton.RegisterCallback<PointerEnterEvent>(OnPopupPointerEnter);
+        _hintButton.RegisterCallback<PointerLeaveEvent>(OnPopupPointerLeave);
+        _menuButton.RegisterCallback<PointerEnterEvent>(OnPopupPointerEnter);
+        _menuButton.RegisterCallback<PointerLeaveEvent>(OnPopupPointerLeave);
+
         //Register events for settings menu items
         _videoVolumeSlider.RegisterValueChangedCallback(OnVideoVolumeSliderChanged);
         _sfxVolumeSlider.RegisterValueChangedCallback(OnSfxVolumeSliderChanged);

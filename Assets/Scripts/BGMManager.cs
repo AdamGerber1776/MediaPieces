@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public class BGMManager : MonoBehaviour
 {
@@ -16,8 +17,9 @@ public class BGMManager : MonoBehaviour
     [SerializeField] private AudioClip chillLofiPianoMusic;
 
     [SerializeField] public AudioSource bgmSource;
-
-    private int loopsRemaining;
+    
+    bool waitingToStartSong = false;
+    private int lastSongNum = -1;
 
     private void Awake()
     {
@@ -40,45 +42,39 @@ public class BGMManager : MonoBehaviour
             if (bgmSource.isPlaying) 
             {
                 Debug.Log("Video is playing, stopping BGM.");
-                loopsRemaining = 0;
                 bgmSource.Stop();
             }
+            waitingToStartSong = false;
             return;
         }
 
-        if (!bgmSource.isPlaying)
+        if (!bgmSource.isPlaying && !waitingToStartSong)
         {
-            loopsRemaining--;
-
-            if (loopsRemaining > 0)
-            {
-                bgmSource.Play();
-            }
-            else
-            {
-                StartSong();
-            }
+            waitingToStartSong = true;
+            StartCoroutine(WaitToStartSong());
         }
     }
 
-    public void PlayMusic(AudioClip song, int playCount)
+    public void PlayMusic(AudioClip song)
     {
         bgmSource.clip = song;
         bgmSource.loop = false;
-        loopsRemaining = playCount;
         bgmSource.Play();
     }
 
     private void StartSong()
     {
         int songNum = Random.Range(0, 10);
-        int playCount = 1;
+        while (songNum == lastSongNum)
+        {
+            songNum = Random.Range(0, 10);
+        }
+        lastSongNum = songNum;
         AudioClip selectedSong = null;
         switch (songNum)
         {
             case 0: 
                 selectedSong = offroadAvenue; 
-                playCount = 5;
                 break;
             case 1: 
                 selectedSong = chillLofiKeepinThePace; 
@@ -103,12 +99,24 @@ public class BGMManager : MonoBehaviour
                 break;
             case 8: 
                 selectedSong = moodyBeat; 
-                playCount = 4;
                 break;
             case 9: 
                 selectedSong = chillLofiPianoMusic; 
                 break;
         }
-        PlayMusic(selectedSong, playCount);
+        PlayMusic(selectedSong);
+    }
+
+    private IEnumerator WaitToStartSong()
+    {
+        yield return new WaitForSeconds(1f);
+
+        // Check again in case a video started during the wait.
+        if (MediaManager.Instance == null || !MediaManager.Instance.videoPlaying)
+        {
+            StartSong();
+        }
+
+        waitingToStartSong = false;
     }
 }

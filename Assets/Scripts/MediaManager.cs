@@ -25,6 +25,14 @@ public class MediaManager : MonoBehaviour
     public GameObject videoPlayerObject;
     public VideoPlayer videoPlayer;
 
+    //variables to handle video stalling
+    private Coroutine videoWatchdog;
+    private bool puzzleCreatedForCurrentVideo = false;
+
+    private const float FreezeTimeout = 5f;
+    private const int MaxRecoveryAttempts = 2;
+    private int recoveryAttempts = 0;
+
     public static MediaManager Instance;
 
     private void Awake()
@@ -111,6 +119,7 @@ public class MediaManager : MonoBehaviour
         videoPlayer = videoPlayerObject.AddComponent<VideoPlayer>();
 
         videoPlayer.url = filePath;
+        puzzleCreatedForCurrentVideo = false;
 
         videoPlayer.renderMode = VideoRenderMode.APIOnly;
 
@@ -170,12 +179,20 @@ public class MediaManager : MonoBehaviour
         Debug.Log("Video prepared!");
         Debug.Log("Video dimensions: " + player.width + " x " + player.height);
         videoFailureNumber = 0;
-        
-        PuzzleManager.CreatePuzzle((int)player.width, (int)player.height);
+        if (!puzzleCreatedForCurrentVideo)
+        {
+            PuzzleManager.CreatePuzzle((int)player.width, (int)player.height);
+            PuzzleUIHandler.CloseLoadingScreen();
+            puzzleCreatedForCurrentVideo = true;
+        }
         PuzzleManager.Instance.puzzleMaterial.mainTexture = player.texture;
-        PuzzleUIHandler.CloseLoadingScreen();
         videoPlaying = true;
         player.Play();
+        
+        if (videoWatchdog == null)
+        {
+            videoWatchdog = StartCoroutine(MonitorVideoPlayback());
+        }
     }
 
     private void OnVideoError(VideoPlayer player, string message)
@@ -285,5 +302,64 @@ public class MediaManager : MonoBehaviour
             PuzzleUIHandler.OpenErrorPopup("GameState instance filepath is null or empty. Try again or select a different file.");
             PuzzleUIHandler.CloseLoadingScreen();
         }
+    }
+
+    private IEnumerator MonitorVideoPlayback()
+    {
+        float previousTime = (float)videoPlayer.time;
+        float stalledTime = 0f;
+
+        while (videoPlayer != null)
+        {
+            yield return new WaitForSecondsRealtime(1f);
+
+            if (videoPlayer == null || !videoPlaying)
+                break;
+
+            float currentTime = (float)videoPlayer.time;
+
+            if (Mathf.Abs(currentTime - previousTime) > 0.05f)
+            {
+                // Playback is advancing normally, including a loop
+                // that jumps from the end back to the beginning.
+                stalledTime = 0f;
+                recoveryAttempts = 0;
+            }
+            else
+            {
+                stalledTime += 1f;
+            }
+
+            previousTime = currentTime;
+
+            if (stalledTime >= FreezeTimeout)
+            {
+                if (recoveryAttempts >= MaxRecoveryAttempts)
+                {
+                    Debug.LogError(
+                        "Video remains frozen after recovery attempts."
+                    );
+
+                    videoPlaying = false;
+                    break;
+                }
+
+                recoveryAttempts++;
+
+                Debug.LogWarning(
+                    $"Video appears frozen. Attempting recovery " +
+                    $"({recoveryAttempts}/{MaxRecoveryAttempts})."
+                );
+
+                videoPlayer.Stop();
+                videoPlayer.isLooping = true;
+                videoPlayer.Prepare();
+
+                stalledTime = 0f;
+                previousTime = 0f;
+            }
+        }
+
+        videoWatchdog = null;
     }
 }

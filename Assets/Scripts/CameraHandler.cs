@@ -18,6 +18,8 @@ public class CameraHandler : MonoBehaviour
     private GameObject selectedPiece;
     private Vector3 dragOffset;
 
+    private float pieceZ;
+
     private void Awake()
     {
         //helps prevent the possibility of having two competing instances of this class
@@ -111,12 +113,15 @@ public class CameraHandler : MonoBehaviour
             Vector3 mouseScreenPosition = Mouse.current.position.ReadValue();
             Vector3 mouseWorldPosition = Camera.main.ScreenToWorldPoint(mouseScreenPosition);
             mouseWorldPosition.z = 0f; // Set z to 0 to ensure the piece stays in the correct plane
+
             if (Physics2D.OverlapPoint(mouseWorldPosition) == null)
             {
                 return;
             }
             Collider2D hit = Physics2D.OverlapPoint(mouseWorldPosition);
             selectedPiece = hit.gameObject;
+            pieceZ = selectedPiece.transform.position.z;
+
             dragOffset = selectedPiece.transform.position - mouseWorldPosition;
             dragOffset.z = -1f; // Set z to -1 to ensure the piece stays above all other pieces while being dragged
             PuzzlePiece puzzlePiece = selectedPiece.GetComponent<PuzzlePiece>();
@@ -155,7 +160,7 @@ public class CameraHandler : MonoBehaviour
                 {
                     puzzlePiece.currentGridPosition = new Vector2Int(-1, -1);
                     Vector3 resetPosition = selectedPiece.transform.position;
-                    resetPosition.z = 0f; //set position back to 0 so it is not above new moved pieces
+                    resetPosition.z = pieceZ; //set position back to 0 so it is not above new moved pieces
                     selectedPiece.transform.position = resetPosition;
                 }
             }
@@ -163,7 +168,7 @@ public class CameraHandler : MonoBehaviour
             {
                 puzzlePiece.currentGridPosition = new Vector2Int(-1, -1);
                 Vector3 resetPosition = selectedPiece.transform.position;
-                resetPosition.z = 0f; //set position back to 0 so it is not above new moved pieces
+                resetPosition.z = pieceZ; //set position back to 0 so it is not above new moved pieces
                 selectedPiece.transform.position = resetPosition;
             }
             selectedPiece = null;
