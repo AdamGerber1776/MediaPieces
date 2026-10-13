@@ -4,6 +4,7 @@ public class AudioManager : MonoBehaviour
 {
     public static AudioManager Instance;
 
+    //Sound Effect Variables
     [SerializeField] private AudioClip pieceSnapSound;
     [SerializeField] private AudioClip buttonSound;
     [SerializeField] private AudioClip completePuzzleSound;
@@ -11,8 +12,10 @@ public class AudioManager : MonoBehaviour
     [SerializeField] private AudioClip errorSound;
     [SerializeField] private AudioClip skipSound;
 
+    //Audio source that plays the sound effects
     [SerializeField] public AudioSource sfxSource;
 
+    //initializes the audiomanager and ensures it persists across scenes
     private void Awake()
     {
         //helps prevent the possibility of having two competing instances of this class
@@ -28,6 +31,7 @@ public class AudioManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
+    //Following functions play the respective sound effects
     public void PlayPieceSnap()
     {
         sfxSource.PlayOneShot(pieceSnapSound, GameState.Instance.sfxVolume);

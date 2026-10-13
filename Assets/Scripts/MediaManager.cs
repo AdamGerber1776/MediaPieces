@@ -17,24 +17,22 @@ public class MediaManager : MonoBehaviour
     public bool gifPlaying = false;
     private float frameDelayTime;
     private int gifFrame;
-    private int videoFailureNumber = 0;
-    public bool videoPlaying = false;
     private List<UniGif.GifTexture> gifTextures;
 
-    //variables to handle video playing
+    //variables to handle video playing and stalling
+    private int videoFailureNumber = 0;
+    public bool videoPlaying = false;
     public GameObject videoPlayerObject;
     public VideoPlayer videoPlayer;
-
-    //variables to handle video stalling
     private Coroutine videoWatchdog;
     private bool puzzleCreatedForCurrentVideo = false;
-
     private const float FreezeTimeout = 5f;
     private const int MaxRecoveryAttempts = 2;
     private int recoveryAttempts = 0;
 
     public static MediaManager Instance;
 
+    //ensures only one instance of MediaManager exists
     private void Awake()
     {
         //helps prevent the possibility of having two competing instances of this class
@@ -47,6 +45,7 @@ public class MediaManager : MonoBehaviour
         Instance = this;
     }
 
+    //initializes the MediaManager and loads the first media file
     void Start()
     {
         if(GameState.Instance.selectedFolderPaths.Count > 0)
@@ -66,6 +65,8 @@ public class MediaManager : MonoBehaviour
         LoadPuzzleFile();
     }
 
+    //updates the gif animation if it is playing
+    //plays gifs using the loaded frames and delay times
     void Update()
     {
         if (gifPlaying)
@@ -84,6 +85,8 @@ public class MediaManager : MonoBehaviour
             }
         }
     }
+
+    //loads an image from the specified file path and creates a puzzle from it
     private void LoadImage(string filePath)
     {
         Debug.Log("Loading image from file: " + filePath);
@@ -104,6 +107,7 @@ public class MediaManager : MonoBehaviour
         }
     }
 
+    //loads an animated image (GIF) from the specified file path
     private void LoadAnimatedImage(string filePath)
     {
         Debug.Log("Loading animated image from file: " + filePath);
@@ -111,30 +115,31 @@ public class MediaManager : MonoBehaviour
         StartCoroutine(LoadGif(filePath));
     }
 
+    //loads a video from the specified file path
     private void LoadVideo(string filePath)
     {
         Debug.Log("Loading video from file: " + filePath);
         videoPlayerObject = new GameObject("VideoPlayer");
-
         videoPlayer = videoPlayerObject.AddComponent<VideoPlayer>();
 
+        //configure the video player settings
         videoPlayer.url = filePath;
         puzzleCreatedForCurrentVideo = false;
-
         videoPlayer.renderMode = VideoRenderMode.APIOnly;
-
         videoPlayer.playOnAwake = false;
         videoPlayer.isLooping = true;
-
         videoPlayer.SetDirectAudioVolume(0, GameState.Instance.videoVolume);
 
+        //add callbacks for video preparation and error handling
         videoPlayer.prepareCompleted += OnVideoPrepared;
         videoPlayer.errorReceived += OnVideoError;
 
+        //prepare the video player to load the video
         videoPlayer.Prepare();
     }
 
-    // to load gifs into a list of frames
+    //loads gifs into a list of frames and delay times
+    //utilizes the unigif plugin for gif decoding functionality
     private IEnumerator LoadGif(string filePath)
     {
         byte[] gifBytes = File.ReadAllBytes(filePath);
@@ -147,6 +152,10 @@ public class MediaManager : MonoBehaviour
         );
     }
 
+    //callback function invoked when a GIF is successfully loaded
+    //this function receives the loaded GIF textures, loop count, and dimensions
+    //creates a puzzle with the first frame of the GIF
+    //and starts the playing of the gif animation
     private void OnGifLoaded(
     List<UniGif.GifTexture> textures,
     int loopCount,
@@ -174,11 +183,15 @@ public class MediaManager : MonoBehaviour
         }
     }
 
+    //callback function invoked when a video is successfully prepared
+    //this function creates a puzzle using the prepared videoplayer, plays the video, and starts a function to watch the video for errors causing it to stop playback
     private void OnVideoPrepared(VideoPlayer player)
     {
         Debug.Log("Video prepared!");
         Debug.Log("Video dimensions: " + player.width + " x " + player.height);
         videoFailureNumber = 0;
+
+        //creates a puzzle from the video
         if (!puzzleCreatedForCurrentVideo)
         {
             PuzzleManager.CreatePuzzle((int)player.width, (int)player.height);
@@ -189,12 +202,15 @@ public class MediaManager : MonoBehaviour
         videoPlaying = true;
         player.Play();
         
+        //start monitoring the video playback to see if it stops unexpectedly
         if (videoWatchdog == null)
         {
             videoWatchdog = StartCoroutine(MonitorVideoPlayback());
         }
     }
 
+    //callback function invoked when a video loading error occurs
+    //this function handles the error by incrementing the failure count, displaying an error popup, and attempting to load the next video if available
     private void OnVideoError(VideoPlayer player, string message)
     {
         Debug.Log("VideoPlayer error: " + message);
@@ -218,6 +234,7 @@ public class MediaManager : MonoBehaviour
     }
 
     //search for all files in the folder and all subfolders
+    //returns a list of valid file paths based on the supported extensions
     private List<string> GetAllFilePaths(string folderPath)
     {
         List<string> filePaths = new List<string>();
@@ -236,6 +253,9 @@ public class MediaManager : MonoBehaviour
         return filePaths;
     }
 
+    //chooses a random file path from the list of selected file paths
+    //removes the chosen file path from the list
+    //if no file paths remain, displays an error popup and closes the loading screen
     public void ChooseFilePath()
     {
         if (GameState.Instance.selectedFilePaths.Count > 0)
@@ -252,6 +272,9 @@ public class MediaManager : MonoBehaviour
         }
     }
 
+    //loads the puzzle file based on the selected file path
+    //determines the type of media (image, animated image, video) and calls the appropriate loading function
+    //if the file path is invalid it displays an error popup and closes the loading screen
     public void LoadPuzzleFile()
     {
         //checks the file path for validity and determines what function to use to load the media
@@ -266,6 +289,8 @@ public class MediaManager : MonoBehaviour
                 Debug.Log("File exists");
                 // Check if the file has a valid image extension
                 string fileExtension = System.IO.Path.GetExtension(filePath).ToLower();
+
+                //determines the type of media based on the file extension
                 if (validImageExtensions.Contains(fileExtension))
                 {
                     Debug.Log("File has a valid image extension: " + fileExtension);
@@ -304,6 +329,9 @@ public class MediaManager : MonoBehaviour
         }
     }
 
+    //monitors the video playback to detect if it stalls or freezes
+    //attempts recovery by restarting the video if it appears frozen
+    //if the video remains frozen after multiple recovery attempts, it stops playback and logs an error
     private IEnumerator MonitorVideoPlayback()
     {
         float previousTime = (float)videoPlayer.time;
@@ -317,7 +345,6 @@ public class MediaManager : MonoBehaviour
                 break;
 
             float currentTime = (float)videoPlayer.time;
-
             if (Mathf.Abs(currentTime - previousTime) > 0.05f)
             {
                 // Playback is advancing normally, including a loop
@@ -329,9 +356,7 @@ public class MediaManager : MonoBehaviour
             {
                 stalledTime += 1f;
             }
-
             previousTime = currentTime;
-
             if (stalledTime >= FreezeTimeout)
             {
                 if (recoveryAttempts >= MaxRecoveryAttempts)
@@ -339,13 +364,10 @@ public class MediaManager : MonoBehaviour
                     Debug.LogError(
                         "Video remains frozen after recovery attempts."
                     );
-
                     videoPlaying = false;
                     break;
                 }
-
                 recoveryAttempts++;
-
                 Debug.LogWarning(
                     $"Video appears frozen. Attempting recovery " +
                     $"({recoveryAttempts}/{MaxRecoveryAttempts})."
@@ -359,7 +381,6 @@ public class MediaManager : MonoBehaviour
                 previousTime = 0f;
             }
         }
-
         videoWatchdog = null;
     }
 }

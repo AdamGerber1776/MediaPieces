@@ -40,8 +40,10 @@ public class PuzzleUIHandler : MonoBehaviour
     private DropdownField _resolutionDropdown;
     private static Label _filePathText;
 
+    //initialize error popup label
     private static Label _errorPopupInfo;
 
+    //initializes the UI elements and buttons
     private void Awake()
     {
         //Gets primary ui document
@@ -71,6 +73,7 @@ public class PuzzleUIHandler : MonoBehaviour
         _fullscreenToggle = _document.rootVisualElement.Q("FullscreenToggle") as Toggle;
         _resolutionDropdown = _document.rootVisualElement.Q("ResolutionDropdown") as DropdownField;
 
+        //get error popup info label
         _errorPopupInfo = _document.rootVisualElement.Q("ErrorPopupInfo") as Label;
 
         //Registers events for clicking each button
@@ -110,6 +113,7 @@ public class PuzzleUIHandler : MonoBehaviour
         UpdateSettings();
     }
 
+    //disables all UI element events when puzzle UI handler is disabled
     private void OnDisable()
     {
         //dissables button events when buttons are dissabled
@@ -157,7 +161,8 @@ public class PuzzleUIHandler : MonoBehaviour
             OpenErrorPopup("No more file paths to load. Return to menu.");
         }
     }
-
+    
+    //highlights an incorrectly placed puzzle piece and its corresponding board location
     private void OnHintButtonPress(ClickEvent evt)
     {
         AudioManager.Instance.PlayButtonPress();
@@ -166,6 +171,7 @@ public class PuzzleUIHandler : MonoBehaviour
         PuzzleManager.HighlightPiece(PuzzleManager.GetHelpPiece());
     }
 
+    //opens the settings menu
     private void OnMenuButtonPress(ClickEvent evt)
     {
         AudioManager.Instance.PlayButtonPress();
@@ -174,11 +180,13 @@ public class PuzzleUIHandler : MonoBehaviour
         _settingsMenu.style.display = DisplayStyle.Flex;
     }
 
+    //shows the puzzle completion popup
     public static void OnPuzzleCompletion()
     {
         _puzzleCompletePopup.style.display = DisplayStyle.Flex;
     }
 
+    //loads the next puzzle or returns to the main menu if no more puzzles are available
     private void OnNextPuzzleButtonPress(ClickEvent evt)
     {
         AudioManager.Instance.PlayButtonPress();
@@ -200,7 +208,8 @@ public class PuzzleUIHandler : MonoBehaviour
         }
     }
 
-    //when popup clicked
+    //functions to handle moving the puzzle completion popup
+    //when popup clicked start dragging the popup if it is over the popup
     private void OnPointerDown(PointerDownEvent evt)
     {
         isDragging = true;
@@ -214,7 +223,8 @@ public class PuzzleUIHandler : MonoBehaviour
         _puzzleCompletePopup.CapturePointer(evt.pointerId);
     }
 
-    //when mouse is moved
+    //when mouse is moved while dragging the popup
+    //updates the position of the popup based on the mouse movement while dragging
     private void OnPointerMove(PointerMoveEvent evt)
     {
         if (!isDragging)
@@ -225,7 +235,7 @@ public class PuzzleUIHandler : MonoBehaviour
         _puzzleCompletePopup.style.top = popupStartPosition.y + delta.y;
     }
 
-    //when popup is no longer clicked
+    //when popup is no longer clicked stop dragging the popup
     private void OnPointerUp(PointerUpEvent evt)
     {
         if (!isDragging)
@@ -236,26 +246,33 @@ public class PuzzleUIHandler : MonoBehaviour
         _puzzleCompletePopup.ReleasePointer(evt.pointerId);
     }
 
+    //when pointer enters the popup area
+    //sets the flag indicating that the pointer is over the popup
     private void OnPopupPointerEnter(PointerEnterEvent evt)
     {
         isPointerOverPopup = true;
     }
 
+    //when pointer leaves the popup area
+    //clears the flag indicating that the pointer is over the popup
     private void OnPopupPointerLeave(PointerLeaveEvent evt)
     {
         isPointerOverPopup = false;
     }
 
+    //closes the loading screen
     public static void CloseLoadingScreen()
     {
         _loadingScreen.style.display = DisplayStyle.None;
     }
 
+    //opens the loading screen
     public static void OpenLoadingScreen()
     {
         _loadingScreen.style.display = DisplayStyle.Flex;
     }
 
+    //closes the settings menu
     private void OnExitSettingsMenuButtonPress(ClickEvent evt)
     {
         AudioManager.Instance.PlayButtonPress();
@@ -263,6 +280,7 @@ public class PuzzleUIHandler : MonoBehaviour
         _settingsMenu.style.display = DisplayStyle.None;
     }
 
+    //returns to the main menu
     private void OnReturnToMenuButtonPress(ClickEvent evt)
     {
         AudioManager.Instance.PlayButtonPress();
@@ -275,6 +293,7 @@ public class PuzzleUIHandler : MonoBehaviour
         SceneManager.LoadScene("MainMenuScene");
     }
 
+    //updates settings variables
     private void OnVideoVolumeSliderChanged(ChangeEvent<float> evt)
     {
         GameState.Instance.UpdateVideoVolume(evt.newValue);
@@ -289,6 +308,7 @@ public class PuzzleUIHandler : MonoBehaviour
     {
         GameState.Instance.UpdateBgmVolume(evt.newValue);
     }
+    
     private void OnFullscreenToggleChanged(ChangeEvent<bool> evt)
     {
         GameState.Instance.UpdateFullscreenToggle(evt.newValue);
@@ -299,6 +319,7 @@ public class PuzzleUIHandler : MonoBehaviour
         GameState.Instance.UpdateResolutionDropdown(evt.newValue);
     }
 
+    //updates the settings UI elements to reflect the current settings
     private void UpdateSettings()
     {
         _videoVolumeSlider.value = GameState.Instance.videoVolume;
@@ -308,6 +329,7 @@ public class PuzzleUIHandler : MonoBehaviour
         _resolutionDropdown.index = _resolutionDropdown.choices.IndexOf(GameState.Instance.resolution);
     }
 
+    //populates the resolution dropdown with available screen resolutions
     private void PopulateResolutionDropdown()
     {
         _resolutionDropdown.choices.Clear();
@@ -324,11 +346,13 @@ public class PuzzleUIHandler : MonoBehaviour
         }
     }
 
+    //populates the file path text field with the currently used file's path
     public static void PopulateFilePath(string path)
     {
         _filePathText.text = path;
     }
 
+    //closes the puzzle complete popup
     private void OnPuzzleCompleteExitButtonPress(ClickEvent evt)
     {
         AudioManager.Instance.PlayButtonPress();
@@ -336,6 +360,7 @@ public class PuzzleUIHandler : MonoBehaviour
         isPointerOverPopup = false;
     }
 
+    //opens the error popup with the specified text
     public static void OpenErrorPopup(string text)
     {
         AudioManager.Instance.PlayError();
@@ -343,6 +368,7 @@ public class PuzzleUIHandler : MonoBehaviour
         _errorPopup.style.display = DisplayStyle.Flex;
     }
 
+    //closes the error popup
     private void OnErrorPopupExitButtonPress(ClickEvent evt)
     {
         AudioManager.Instance.PlayButtonPress();

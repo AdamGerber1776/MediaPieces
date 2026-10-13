@@ -6,6 +6,7 @@ using UnityEngine;
 
 public class PuzzleManager : MonoBehaviour
 {
+    //initialization of the materials and components related to puzzle creation and interaction
     [SerializeField] private Material cellMaterial;
     [SerializeField] private Material gridMaterial;
     [SerializeField] public Material puzzleMaterial;
@@ -13,6 +14,8 @@ public class PuzzleManager : MonoBehaviour
     [SerializeField] private Material highlightMaterial;
 
     public static PuzzleManager Instance;
+
+    //variables holding information about the puzzle's dimensions, difficulty, and grid structure
     private static float pieceWidth;
     private static float pieceHeight;
     private static float boardWidth;
@@ -21,12 +24,14 @@ public class PuzzleManager : MonoBehaviour
     private static int columns;
     private static int rows;
 
+    //keeps track of which grid positions are currently occupied by puzzle pieces
     public static int[,] occupiedGridPositions;
 
-    //for handling highlighting and unhighlighting pieces
+    //for handling highlighting and unhighlighting puzzle pieces and board pieces
     private static GameObject highlightPieceObject;
     private static GameObject highlightBoardPieceObject;
 
+    //ensures the puzzle manager is not duplicated and configures difficulty and highlight material
     private void Awake()
     {
         //helps prevent the possibility of having two competing instances of this class
@@ -41,11 +46,13 @@ public class PuzzleManager : MonoBehaviour
         ConfigureHighlightMaterial(highlightMaterial);
     }
 
+    //creates the puzzle based on the specified width and height, determining the number of columns and rows based on difficulty and aspect ratio
     public static void CreatePuzzle(int width, int height)
     {
         Debug.Log("Creating puzzle from image of size: " + width + "x" + height);
         Debug.Log("Creating puzzle of difficulty " + difficulty);
 
+        //determines the number of columns and rows based on the difficulty and aspect ratio of the image
         float aspectRatio = (float)width / height;
         int maxPiecesInOneDimension = difficulty * 2;
         if (aspectRatio >= 1f)
@@ -68,7 +75,7 @@ public class PuzzleManager : MonoBehaviour
         float pieceHeightPercent = 1.0f / rows;
         Instance.BuildBoard();
 
-        //variables to determine piece random placement location
+        //variables to determine piece random placement location around the board
         float boardLeft   = -boardWidth / 2f;
         float boardRight  =  boardWidth / 2f;
         float piecesPadding = 1f; //padding to prevent pieces from being placed too close to the board edges
@@ -76,6 +83,7 @@ public class PuzzleManager : MonoBehaviour
         float pieceZ = 0;
 
         //creates the puzzle pieces and places them around the board
+        //this utilizes uv mapping so that each piece uses a piece of one texture rather than all having their own separate textures
         for (int x = 0; x < columns; x++)
         {
             for (int y = 0; y < rows; y++)
@@ -148,6 +156,9 @@ public class PuzzleManager : MonoBehaviour
         }
     }
 
+    //builds the puzzle board grid and the individual board pieces
+    //includes calculating the grid gap based on the piece dimensions
+    //also zooms the camera to fit the board size to ensure the entire puzzle is visible
     private void BuildBoard()
     {
         boardWidth = pieceWidth * columns;
@@ -164,7 +175,6 @@ public class PuzzleManager : MonoBehaviour
             gridGap = pieceHeight * 0.01f; 
         }
         
-
         int[] triangles =
         {
             0, 2, 1,
@@ -239,7 +249,7 @@ public class PuzzleManager : MonoBehaviour
         CameraHandler.Instance.FrameBoard(boardWidth, boardHeight);
     }
 
-    //to get the world position of a piece based on its grid position
+    //function to get the world position of a piece based on its grid position
     public static Vector3 GetBoardPosition(int x, int y)
     {
         float posX = -boardWidth / 2f + pieceWidth / 2f + x * pieceWidth;
@@ -248,8 +258,8 @@ public class PuzzleManager : MonoBehaviour
         return new Vector3(posX, posY, 0f);
     }
 
-    //to get the grid position of a piece based on its world position
-    //this is a rounded variable so it will round to the nearest grid position, which is useful for snapping pieces into place
+    //function to get the grid position of a piece based on its world position
+    //this is a rounded variable so it will round to the nearest grid position, which is useful for snapping puzzle pieces into place
     public static Vector2Int GetPieceGridPosition(Vector3 piecePosition)
     {
         float relativeX = piecePosition.x - (-boardWidth / 2f + pieceWidth / 2f);
@@ -294,6 +304,7 @@ public class PuzzleManager : MonoBehaviour
         AudioManager.Instance.PlayCompletePuzzle();
     }
 
+    //function to get a random piece that is not yet placed correctly, used for providing hints to the player
     public static PuzzlePiece GetHelpPiece()
     {
         PuzzlePiece[] pieces = FindObjectsByType<PuzzlePiece>(FindObjectsSortMode.None);
@@ -314,6 +325,7 @@ public class PuzzleManager : MonoBehaviour
         return availablePieces[index];
     }
 
+    //function to configure the highlight material used for highlighting puzzle pieces and board pieces
     private static void ConfigureHighlightMaterial(Material material)
     {
         material.SetFloat("_Surface", 1f); // Transparent
@@ -330,7 +342,7 @@ public class PuzzleManager : MonoBehaviour
         material.SetColor("_BaseColor", new Color(1f, 1f, 0f, 0.35f));
     }
 
-    //highlight a piece and its correct board location
+    //function to highlight a piece and its correct board location
     public static void HighlightPiece(PuzzlePiece piece)
     {
         // Remove previous highlight
@@ -377,7 +389,7 @@ public class PuzzleManager : MonoBehaviour
         }
     }
 
-    //clear highlight on piece and board
+    //function to clear highlight on a puzzle piece and board piece
     public static void ClearHighlight()
     {
         PuzzlePiece[] pieces = GameObject.FindObjectsByType<PuzzlePiece>();
@@ -399,6 +411,7 @@ public class PuzzleManager : MonoBehaviour
         }
     }
 
+    //function to clear the entire puzzle, including all pieces and media objects
     public static void ClearPuzzle()
     {
         foreach (Transform child in Instance.puzzle)

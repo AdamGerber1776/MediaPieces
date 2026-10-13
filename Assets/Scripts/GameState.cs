@@ -5,17 +5,22 @@ public class GameState : MonoBehaviour
 {
     public static GameState Instance;
 
-    //file path to be used in puzzle scene
+    //file selection and path related variables
     public string selectedFilePath;
-    public int selectedDifficulty;
     public List<string> selectedFolderPaths = new List<string>();
     public List<string> selectedFilePaths = new List<string>();
+
+    //difficulty variables
+    public int selectedDifficulty;
+
+    //settings variables
     public float videoVolume;
     public float sfxVolume;
     public float bgmVolume;
     public bool fullscreen;
     public string resolution;
     
+    //initializes the game state, stops it from being destroyed on a scene change, and prevents duplication
     private void Awake()
     {
         //helps prevent the possibility of having two competing instances of this class
@@ -31,6 +36,8 @@ public class GameState : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
+    //loads the saved settings from PlayerPrefs and applies them to the game
+    //playerprefs persist after application close
     private void LoadSettings()
     {
         videoVolume = PlayerPrefs.GetFloat("Video Volume", 1f);
@@ -44,6 +51,7 @@ public class GameState : MonoBehaviour
         MainMenuHandler.UpdateSettings();
     }
 
+    //updates the settings variables and saves them to PlayerPrefs
     public void UpdateVideoVolume(float newVal)
     {
         videoVolume = newVal;
@@ -86,6 +94,7 @@ public class GameState : MonoBehaviour
         ApplyResolution();
     }
 
+    //applies the current resolution and fullscreen settings to the game
     public void ApplyResolution()
     {
         string[] dimensions = resolution.Split('x');
@@ -111,6 +120,7 @@ public class GameState : MonoBehaviour
         }
     }
 
+    //applies the current audio settings to the game
     public void ApplyAudioSettings()
     {
         if (AudioManager.Instance != null) AudioManager.Instance.sfxSource.volume = sfxVolume;

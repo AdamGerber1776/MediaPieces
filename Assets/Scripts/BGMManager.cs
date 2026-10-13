@@ -5,6 +5,7 @@ public class BGMManager : MonoBehaviour
 {
     public static BGMManager Instance;
 
+    //Background Music Variables
     [SerializeField] private AudioClip offroadAvenue;
     [SerializeField] private AudioClip chillLofiKeepinThePace;
     [SerializeField] private AudioClip lofiLostStars;
@@ -16,11 +17,14 @@ public class BGMManager : MonoBehaviour
     [SerializeField] private AudioClip moodyBeat;
     [SerializeField] private AudioClip chillLofiPianoMusic;
 
+    //Audio source that plays the background music
     [SerializeField] public AudioSource bgmSource;
     
+    //flags to indicate when a song is waiting to start and what song previously played
     bool waitingToStartSong = false;
     private int lastSongNum = -1;
 
+    //initializes the bgmmanager and ensures it persists across scenes
     private void Awake()
     {
         //helps prevent the possibility of having two competing instances of this class
@@ -35,6 +39,9 @@ public class BGMManager : MonoBehaviour
         //keeps the game state object from being destroyed when loading a new scene
         DontDestroyOnLoad(gameObject);
     }
+
+    //Makes checks for video playing and song status
+    //This determines whether the background music should be playing or not and if it needs to start a new song.
     private void Update()
     {
         if (MediaManager.Instance != null && MediaManager.Instance.videoPlaying) 
@@ -55,6 +62,7 @@ public class BGMManager : MonoBehaviour
         }
     }
 
+    //Starts playing the selected song
     public void PlayMusic(AudioClip song)
     {
         bgmSource.clip = song;
@@ -62,6 +70,7 @@ public class BGMManager : MonoBehaviour
         bgmSource.Play();
     }
 
+    //Selects a random song and starts playing it
     private void StartSong()
     {
         int songNum = Random.Range(0, 10);
@@ -107,6 +116,7 @@ public class BGMManager : MonoBehaviour
         PlayMusic(selectedSong);
     }
 
+    //Waits for a short duration before starting a new song, ensuring no video is playing
     private IEnumerator WaitToStartSong()
     {
         yield return new WaitForSeconds(1f);
